@@ -63,41 +63,41 @@ const NewsletterForm = () => {
       >
         <h3
           id="newsletter-title"
-          className="font-medium text-4xl font-bold text-green-900 uppercase tracking-wide"
+          className="font-medium text-4xl font-bold text-emerald-900 uppercase tracking-wide"
         >
           Бюлетин
         </h3>
-        <p className="mt-1 text-lg text-green-900">
+        <p className="mt-1 text-lg text-emerald-900">
           Получавай последните новини от мен по електронната си поща.
         </p>
 
         <div className="mt-4 text-lg grid gap-3">
           <label className="block">
-            <span className="text-sm font-medium text-green-900">Име</span>
+            <span className="text-sm font-medium text-emerald-900">Име</span>
             <input
               name="name"
               type="text"
-              className="w-full border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-600"
+              className="w-full border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-600"
             />
           </label>
 
           <label className="block">
-            <span className="text-sm font-medium text-green-900">
+            <span className="text-sm font-medium text-emerald-900">
               Електронна поща
             </span>
             <input
               name="email"
               type="email"
               required
-              className="w-full border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-600"
+              className="w-full border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-600"
             />
           </label>
 
-          <label className="flex items-start gap-2 text-sm text-green-900">
+          <label className="flex items-start gap-2 text-sm text-emerald-900">
             <input
               name="consent"
               type="checkbox"
-              className="mt-1 h-4 w-4 border-gray-300 text-green-900 focus:ring-green-600"
+              className="mt-1 h-4 w-4 border-gray-300 text-emerald-900 focus:ring-emerald-600"
             />
             <span>
               Съгласен съм да получавам новини по имейл и приемам политиката за
@@ -108,7 +108,7 @@ const NewsletterForm = () => {
           <button
             type="submit"
             disabled={status.state === "loading"}
-            className="mt-2 inline-flex items-center justify-center bg-green-900 px-4 py-2 font-semibold text-white hover:bg-green-800 disabled:opacity-60"
+            className="mt-2 inline-flex items-center justify-center bg-emerald-900 px-4 py-2 font-semibold text-white hover:bg-emerald-800 disabled:opacity-60"
           >
             {status.state === "loading" ? "Sending…" : "Изпрати"}
           </button>
@@ -117,7 +117,7 @@ const NewsletterForm = () => {
             <div
               className={
                 status.state === "success"
-                  ? "text-green-800 text-sm mt-1"
+                  ? "text-emerald-800 text-sm mt-1"
                   : "text-red-700 text-sm mt-1"
               }
               role={status.state === "success" ? "status" : "alert"}
