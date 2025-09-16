@@ -1,12 +1,10 @@
-import { useState } from "react";
-
 const Heading = ({ text, href = "#", isCta = false }) => (
   <a
     href={href}
     className={`text-center py-4 px-6 font-medium font-semibold uppercase text-xl tracking-wide
       ${isCta
-        ? "bg-green-900 text-white hover:bg-green-800"
-        : "bg-white text-green-900 hover:bg-green-50 hover:text-green-700"
+        ? "bg-emerald-950 text-white hover:bg-green-800"
+        : "bg-white text-emerald-950 hover:bg-green-50 hover:text-green-700"
       }`}
   >
     {text}
@@ -27,14 +25,7 @@ const Header = () => {
           <Heading text="Трафопост сега" href="#get-started" />
           <Heading text="Get Started" href="#get-started" isCta />
         </nav>
-      </div>
-
-      {/* Optional logo or content on the left side (transparent area) */}
-      <div className="relative px-4 py-3">
-        <a href="/" className="text-2xl font-bold text-blue-600 uppercase">
-          MySite
-        </a>
-      </div>
+      </div>  
     </header>
   );
 };
