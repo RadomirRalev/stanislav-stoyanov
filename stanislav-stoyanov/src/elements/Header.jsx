@@ -17,7 +17,7 @@ const Header = () => {
       {/* White background is only as wide as the nav inside it */}
       <div className="absolute inset-y-0 right-0 bg-white">
         <nav className="flex">
-          <Heading text="Лорем" href="#contact" />
+          <Heading text="Новини" href="#contact" />
           <Heading text="Ипсум" href="#home" />
           <Heading text="Долор" href="#about" />
           <Heading text="Сит" href="#services" />
