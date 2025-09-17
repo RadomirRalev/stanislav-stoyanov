@@ -1,8 +1,9 @@
-import GreenQuoteSection from "./elements/GreenQuoteSection";
+﻿import GreenQuoteSection from "./elements/GreenQuoteSection";
 import Header from "./elements/Header";
 import NewsSection from "./elements/NewsSection";
 import Footer from "./elements/Footer";
 import SocialBridge from "./elements/SocialBridge";
+import YouTubeShowcase from "./elements/YouTubeShowcase";
 
 export default function App() {
   return (
@@ -28,6 +29,8 @@ export default function App() {
       <section>
         <NewsSection />
       </section>
+
+      <YouTubeShowcase />
 
       <Footer />
     </div>

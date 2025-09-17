@@ -1,4 +1,4 @@
-﻿import { newsItems } from "./data/news";
+import { newsItems } from "./data/news";
 
 export default function NewsSection() {
   const [lead, ...rest] = newsItems;
@@ -33,7 +33,7 @@ export default function NewsSection() {
             <img
               src={lead.imageSrc}
               alt={lead.imageAlt}
-              className="h-96 w-full object-cover transition duration-700 group-hover:scale-105"
+              className="h-96 w-full object-cover object-top transition duration-700 group-hover:scale-105"
               loading="lazy"
             />
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/80 to-transparent p-8 text-white">
@@ -63,7 +63,7 @@ export default function NewsSection() {
                 <img
                   src={item.imageSrc}
                   alt={item.imageAlt}
-                  className="h-72 w-full object-cover transition duration-700 group-hover:scale-105"
+                  className="h-72 w-full object-cover object-top transition duration-700 group-hover:scale-105"
                   loading="lazy"
                 />
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/80 to-transparent p-6 text-white">
@@ -82,3 +82,4 @@ export default function NewsSection() {
     </section>
   );
 }
+
