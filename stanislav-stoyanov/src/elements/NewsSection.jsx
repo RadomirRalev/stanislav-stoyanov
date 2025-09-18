@@ -26,15 +26,6 @@ export default function NewsSection() {
       className="bg-gradient-to-b from-white via-emerald-50 to-emerald-100 py-16"
     >
       <div className="mx-auto max-w-7xl px-6 md:px-12">
-        <header className="max-w-2xl text-green-900">
-          <h2 className="text-3xl font-bold uppercase tracking-wide md:text-4xl">
-            Latest News
-          </h2>
-          <p className="mt-3 text-lg text-green-800/80 md:text-xl">
-            Brief intro copy...
-          </p>
-        </header>
-
         {lead && (
           <a
             href={lead.url}
