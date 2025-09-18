@@ -1,1 +1,4 @@
+cat <<'EOF' > stanislav-stoyanov/.husky/pre-commit
 #!/usr/bin/env sh
+EOF
+
