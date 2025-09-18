@@ -16,15 +16,6 @@ export default function NewsSection() {
       className="bg-gradient-to-b from-white via-emerald-50 to-emerald-100 py-16"
     >
       <div className="mx-auto max-w-7xl px-6 md:px-12">
-        <header className="max-w-2xl text-green-900">
-          <h2 className="text-3xl font-bold uppercase tracking-wide md:text-4xl">
-            Latest News
-          </h2>
-          <p className="mt-3 text-lg text-green-800/80 md:text-xl">
-            Brief intro copy...
-          </p>
-        </header>
-
         {lead && (
           <a
             href={lead.url}
@@ -40,13 +31,9 @@ export default function NewsSection() {
               <time className="text-xs font-semibold uppercase tracking-[0.4em] text-green-200/80">
                 {lead.date}
               </time>
-              <h3 className="mt-3 text-3xl font-semibold">
-                {lead.title}
-              </h3>
+              <h3 className="mt-3 text-3xl font-semibold">{lead.title}</h3>
               {leadBlurb && (
-                <p className="mt-4 text-base text-green-100/90">
-                  {leadBlurb}
-                </p>
+                <p className="mt-4 text-base text-green-100/90">{leadBlurb}</p>
               )}
             </div>
           </a>
@@ -70,9 +57,7 @@ export default function NewsSection() {
                   <time className="text-xs font-semibold uppercase tracking-[0.4em] text-green-200/80">
                     {item.date}
                   </time>
-                  <h3 className="mt-3 text-2xl font-semibold">
-                    {item.title}
-                  </h3>
+                  <h3 className="mt-3 text-2xl font-semibold">{item.title}</h3>
                 </div>
               </a>
             ))}
@@ -82,4 +67,3 @@ export default function NewsSection() {
     </section>
   );
 }
-
