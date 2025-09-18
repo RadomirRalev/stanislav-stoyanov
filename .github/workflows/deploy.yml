@@ -36,6 +36,12 @@ jobs:
         working-directory: stanislav-stoyanov
         run: npm run build
 
+      - name: Release
+        working-directory: stanislav-stoyanov
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
