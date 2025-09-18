@@ -1,3 +1,4 @@
+﻿import { useState } from "react";
 import GreenQuoteSection from "./elements/GreenQuoteSection";
 import Header from "./elements/Header";
 import NewsSection from "./elements/NewsSection";
@@ -8,13 +9,15 @@ import AllNewsSection from "./elements/AllNewsSection";
 import UpcomingEvents from "./elements/UpcomingEvents";
 
 export default function App() {
+  const [showAllNews, setShowAllNews] = useState(false);
+
   return (
     <div className="min-h-screen w-full">
       <section
         className="relative w-full min-h-[90vh] bg-cover bg-top bg-no-repeat"
         style={{ backgroundImage: `url(${import.meta.env.BASE_URL}background.jpg)` }}
       >
-        <Header />
+        <Header onShowAllNews={() => setShowAllNews(true)} />
         <div
           className="pointer-events-none absolute inset-x-0 bottom-0 h-40
                bg-gradient-to-b from-transparent via-teal-300/40 to-teal-600/60"
@@ -32,6 +35,10 @@ export default function App() {
         <NewsSection />
       </section>
 
+      {showAllNews && (
+        <AllNewsSection onClose={() => setShowAllNews(false)} />
+      )}
+
       <YouTubeShowcase />
 
       <UpcomingEvents />
@@ -40,5 +47,3 @@ export default function App() {
     </div>
   );
 }
-
-

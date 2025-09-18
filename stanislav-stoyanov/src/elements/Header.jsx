@@ -1,6 +1,7 @@
-const Heading = ({ text, href = "#", isCta = false }) => (
+const Heading = ({ text, href = "#", isCta = false, onClick }) => (
   <a
     href={href}
+    onClick={onClick}
     className={`text-center py-4 px-6 font-medium font-semibold uppercase text-xl tracking-wide
       ${isCta
         ? "bg-emerald-950 text-white hover:bg-green-800"
@@ -11,21 +12,32 @@ const Heading = ({ text, href = "#", isCta = false }) => (
   </a>
 );
 
-const Header = () => {
+const Header = ({ onShowAllNews }) => {
+  const handleAllNewsClick = (event) => {
+    if (!onShowAllNews) return;
+
+    event.preventDefault();
+    onShowAllNews();
+
+    setTimeout(() => {
+      document.getElementById("all-news")?.scrollIntoView({ behavior: "smooth" });
+    }, 0);
+  };
+
   return (
     <header className="relative w-full sticky top-0 z-50">
       {/* White background is only as wide as the nav inside it */}
       <div className="absolute inset-y-0 right-0 bg-white">
         <nav className="flex">
-          <Heading text="??????" href="#all-news" />
-          <Heading text="Ипсум" href="#home" />
-          <Heading text="Долор" href="#about" />
-          <Heading text="Сит" href="#services" />
-          <Heading text="??????" href="#contact" />
-          <Heading text="Трафопост сега" href="#get-started" />
+          <Heading text="??????" href="#all-news" onClick={handleAllNewsClick} />
+          <Heading text="?????" href="#home" />
+          <Heading text="?????" href="#about" />
+          <Heading text="???" href="#services" />
+          <Heading text="????" href="#contact" />
+          <Heading text="????????? ????" href="#get-started" />
           <Heading text="Get Started" href="#get-started" isCta />
         </nav>
-      </div>  
+      </div>
     </header>
   );
 };
