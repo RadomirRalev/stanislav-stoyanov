@@ -1,4 +1,4 @@
-﻿import GreenQuoteSection from "./elements/GreenQuoteSection";
+import GreenQuoteSection from "./elements/GreenQuoteSection";
 import Header from "./elements/Header";
 import NewsSection from "./elements/NewsSection";
 import Footer from "./elements/Footer";
@@ -11,7 +11,7 @@ export default function App() {
     <div className="min-h-screen w-full">
       <section
         className="relative w-full min-h-[90vh] bg-cover bg-top bg-no-repeat"
-        style={{ backgroundImage: "url('/background.jpg')" }}
+        style={{ backgroundImage: `url(${import.meta.env.BASE_URL}background.jpg)` }}
       >
         <Header />
         <div
