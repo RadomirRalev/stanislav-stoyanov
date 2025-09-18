@@ -4,6 +4,7 @@ import NewsSection from "./elements/NewsSection";
 import Footer from "./elements/Footer";
 import SocialBridge from "./elements/SocialBridge";
 import YouTubeShowcase from "./elements/YouTubeShowcase";
+import AllNewsSection from "./elements/AllNewsSection";
 import UpcomingEvents from "./elements/UpcomingEvents";
 
 export default function App() {
@@ -39,3 +40,5 @@ export default function App() {
     </div>
   );
 }
+
+

@@ -17,11 +17,11 @@ const Header = () => {
       {/* White background is only as wide as the nav inside it */}
       <div className="absolute inset-y-0 right-0 bg-white">
         <nav className="flex">
-          <Heading text="Новини" href="#contact" />
+          <Heading text="??????" href="#all-news" />
           <Heading text="Ипсум" href="#home" />
           <Heading text="Долор" href="#about" />
           <Heading text="Сит" href="#services" />
-          <Heading text="Амет" href="#contact" />
+          <Heading text="??????" href="#contact" />
           <Heading text="Трафопост сега" href="#get-started" />
           <Heading text="Get Started" href="#get-started" isCta />
         </nav>
