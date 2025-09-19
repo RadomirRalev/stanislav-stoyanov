@@ -71,3 +71,8 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 } */
+@layer base {
+  body {
+    @apply font-sans bg-white text-emerald-950 antialiased;
+  }
+}

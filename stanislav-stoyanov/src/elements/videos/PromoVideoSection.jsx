@@ -30,7 +30,7 @@ const PromoVideoSection = ({
       <div className="mx-auto max-w-6xl px-6 py-16">
         {/* Header */}
         <div className="max-w-3xl">
-          <h2 className="font-serif text-3xl md:text-4xl font-bold uppercase tracking-wide">
+          <h2 className="font-sans text-3xl md:text-4xl font-bold uppercase tracking-wide">
             {title}
           </h2>
           <p className="mt-4 text-lg md:text-xl opacity-90">

@@ -2,13 +2,13 @@
 export default {
   content: [
     "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}", // scan all React + TSX/JSX files
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
       fontFamily: {
-        serif: ["Merriweather", "serif"], // your politician-style font
-        sans: ["Inter", "sans-serif"],    // optional body font
+        serif: ["Roboto", "system-ui", "serif"],
+        sans: ["Roboto", "system-ui", "sans-serif"],
       },
     },
   },
