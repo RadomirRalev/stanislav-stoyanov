@@ -1,4 +1,5 @@
-﻿import { newsItems } from "../data/news";
+﻿import { Link } from 'react-router-dom';
+import { newsItems } from "../data/news";
 
 const resolveImageSrc = (src) => {
   if (!src) return "";
@@ -27,8 +28,8 @@ export default function NewsSection() {
     >
       <div className="mx-auto max-w-7xl px-6 md:px-12">
         {lead && (
-          <a
-            href={lead.url}
+          <Link
+            to={`/news/${lead.slug}`}
             className="group relative mt-10 block overflow-hidden bg-gray-900 shadow-2xl"
           >
             <img
@@ -46,15 +47,15 @@ export default function NewsSection() {
                 <p className="mt-4 text-base text-green-100/90">{leadBlurb}</p>
               )}
             </div>
-          </a>
+          </Link>
         )}
 
         {secondaryItems.length > 0 && (
           <div className="mt-12 grid gap-8 md:grid-cols-2">
             {secondaryItems.map((item) => (
-              <a
+              <Link
                 key={`${item.id}-${item.title}`}
-                href={item.url}
+                to={`/news/${item.slug}`}
                 className="group relative block overflow-hidden bg-gray-900 shadow-xl"
               >
                 <img
@@ -69,7 +70,7 @@ export default function NewsSection() {
                   </time>
                   <h3 className="mt-3 text-2xl font-semibold">{item.title}</h3>
                 </div>
-              </a>
+              </Link>
             ))}
           </div>
         )}

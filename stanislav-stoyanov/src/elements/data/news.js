@@ -1,6 +1,15 @@
+export const getAllNews = () => {
+  return newsItems;
+}
+
+export const getNewsBySlug = (slug)=> {
+  return newsItems.find(item => item.slug === slug);
+}
+
 export const newsItems = [
   {
     id: "aug-25-town-hall",
+    slug: "aug-25-town-hall",
     title: "Парламентът гласува на второ четене промени в Закона за железопътния транспорт",
     date: "25 септември, 2025",
     excerpt: "It  is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
@@ -10,6 +19,7 @@ export const newsItems = [
   },
   {
     id: "sep-25-town-hall",
+    slug: "sep-25-town-hall",
     title: "Реформата в местната публична администрация обсъдиха членове на румънското правителство и представители от сектора",
     date: "20 септември, 2025",
     excerpt: "Highlights from our talk...",
@@ -18,7 +28,8 @@ export const newsItems = [
     imageAlt: "Candidate speaking with neighbors at a community event.",
   },
   {
-    id: "aug-25-town-hall",
+    id: "dronamix-kawasaki",
+    slug: "dronamix-kawasaki",
     title: "Българската компания 'Дронамикс' и японската 'Кавазаки Мотърс' стават стратегически партньори за разработване на авиационни двигатели",
     date: "18 септември, 2025",
     excerpt: "Highlights from our conversation...",
@@ -27,7 +38,8 @@ export const newsItems = [
     imageAlt: "Residents gathered during an evening town hall meeting.",
   },
   {
-    id: "aug-25-town-hall",
+    id: "manutd-income",
+    slug: "manutd-income",
     title: "Манчестър Юнайтед отчете рекордни приходи в последните си годишни отчети",
     date: "28 август, 2025",
     excerpt: "Highlights from our conversation...",
@@ -36,7 +48,8 @@ export const newsItems = [
     imageAlt: "Residents gathered during an evening town hall meeting.",
   },
   {
-    id: "aug-25-town-hall",
+    id: "birth-years",
+    slug: "birth-years",
     title: "Навършват се 120 години от рождението на най-загадъчната дама в киното Грета Гарбо",
     date: "14 юли, 2025",
     excerpt: "Highlights from our conversation...",
@@ -45,7 +58,8 @@ export const newsItems = [
     imageAlt: "Residents gathered during an evening town hall meeting.",
   },
   {
-    id: "aug-25-town-hall",
+    id: "conversation-highlights",
+    slug: "conversation-highlights",
     title: "Town Hall Recap",
     date: "Aug 25, 2025",
     excerpt: "Highlights from our conversation...",

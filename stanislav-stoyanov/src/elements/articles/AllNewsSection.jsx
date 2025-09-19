@@ -1,4 +1,5 @@
-﻿import { newsItems } from "../data/news";
+﻿import { Link } from 'react-router-dom';
+import { newsItems } from "../data/news";
 
 const resolveImageSrc = (src) => {
   if (!src) return "";
@@ -44,9 +45,9 @@ const AllNewsSection = ({ onClose }) => {
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {newsItems.map((item, index) => (
-            <a
+            <Link
               key={`${item.id}-${index}`}
-              href={item.url}
+              to={`/news/${item.slug}`}
               className="group flex h-full flex-col overflow-hidden border border-emerald-200/70 bg-white/90 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-emerald-400/80"
             >
               {item.imageSrc ? (
@@ -74,7 +75,7 @@ const AllNewsSection = ({ onClose }) => {
                   {item.excerpt}
                 </p>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>
