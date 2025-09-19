@@ -1,41 +1,17 @@
-import GreenQuoteSection from "./elements/GreenQuoteSection";
-import Header from "./elements/Header";
-import NewsSection from "./elements/NewsSection";
-import Footer from "./elements/Footer";
-import SocialBridge from "./elements/SocialBridge";
-import YouTubeShowcase from "./elements/YouTubeShowcase";
-import UpcomingEvents from "./elements/UpcomingEvents";
+﻿import { BrowserRouter, Routes, Route } from "react-router-dom";
+import LandingPage from "./elements/LandingPage";
+import NewsSection from "./elements/articles/NewsSection";
+import NewsArticlePage from "./elements/articles/NewsArticlePage";
 
 export default function App() {
+
   return (
-    <div className="min-h-screen w-full">
-      <section
-        className="relative w-full min-h-[90vh] bg-cover bg-top bg-no-repeat"
-        style={{ backgroundImage: `url(${import.meta.env.BASE_URL}background.jpg)` }}
-      >
-        <Header />
-        <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-40
-               bg-gradient-to-b from-transparent via-teal-300/40 to-teal-600/60"
-          aria-hidden="true"
-        />
-      </section>
-
-      <section>
-        <GreenQuoteSection />
-      </section>
-
-      <SocialBridge />
-
-      <section>
-        <NewsSection />
-      </section>
-
-      <YouTubeShowcase />
-
-      <UpcomingEvents />
-
-      <Footer />
-    </div>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/news" element={<NewsSection />} />
+        <Route path="/news/:slug" element={<NewsArticlePage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }

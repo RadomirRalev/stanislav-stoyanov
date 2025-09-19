@@ -1,5 +1,5 @@
 import { useState } from "react";
-import EnterAnimation from "./animation/Animation";
+import EnterAnimation from "../animation/Animation";
 import { motion } from "motion/react";
 
 const NewsletterForm = () => {
