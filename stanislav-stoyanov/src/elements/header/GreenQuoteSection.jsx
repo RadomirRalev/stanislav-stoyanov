@@ -22,9 +22,9 @@ const GreenQuoteSection = ({
           <div className="grid items-center gap-10 md:grid-cols-2">
             {/* Quote */}
             <div>
-              <blockquote className="relative text-2xl md:text-3xl font-serif leading-snug">
+              <blockquote className="relative text-2xl md:text-3xl font-sans leading-snug">
                 <span
-                  className="absolute -left-4 -top-8 text-7xl font-serif text-emerald-200 select-none"
+                  className="absolute -left-4 -top-8 text-7xl font-sans text-emerald-200 select-none"
                   aria-hidden="true"
                 >
                   “
@@ -33,7 +33,7 @@ const GreenQuoteSection = ({
               </blockquote>
 
               <div className="mt-6 text-emerald-200">
-                <div className="font-serif text-xl font-bold uppercase tracking-wide">
+                <div className="font-sans text-xl font-bold uppercase tracking-wide">
                   {author}
                 </div>
                 <div className="text-sm md:text-base opacity-90">{role}</div>
@@ -64,3 +64,4 @@ const GreenQuoteSection = ({
 };
 
 export default GreenQuoteSection;
+
