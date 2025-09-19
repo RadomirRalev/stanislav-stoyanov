@@ -27,6 +27,16 @@ export default function NewsSection() {
       className="bg-gradient-to-b from-white via-emerald-50 to-emerald-100 py-16"
     >
       <div className="mx-auto max-w-7xl px-6 md:px-12">
+        <div className="flex justify-end mb-8">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-3 border border-emerald-300 bg-white px-6 py-3 text-lg font-semibold text-emerald-900 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+          >
+            <span aria-hidden="true" className="text-xl leading-none text-emerald-500">&larr;</span>
+            <span>Към началото</span>
+          </Link>
+        </div>
+
         {lead && (
           <Link
             to={`/news/${lead.slug}`}
@@ -78,3 +88,6 @@ export default function NewsSection() {
     </section>
   );
 }
+
+
+

@@ -1,5 +1,5 @@
 ﻿import { Link, useParams } from 'react-router-dom';
-import { getNewsBySlug } from '../elements/data/news';
+import { getNewsBySlug } from '../data/news';
 
 const resolveImageSrc = (src) => {
   if (!src) return '';
