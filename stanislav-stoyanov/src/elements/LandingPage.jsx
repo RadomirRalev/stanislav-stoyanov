@@ -25,23 +25,12 @@ const LandingPage = () => {
           aria-hidden="true"
         />
       </section>
-
-      <section>
-        <GreenQuoteSection />
-      </section>
-
+      <GreenQuoteSection />
       <SocialBridge />
-
-      <section>
-        <NewsSection />
-      </section>
-
+      <NewsSection showBackLink={false} />
       {showAllNews && <AllNewsSection onClose={() => setShowAllNews(false)} />}
-
       <YouTubeShowcase />
-
       <UpcomingEvents />
-
       <Footer />
     </div>
   );
