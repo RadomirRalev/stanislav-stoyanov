@@ -29,12 +29,12 @@ const Header = ({ onShowAllNews }) => {
       {/* White background is only as wide as the nav inside it */}
       <div className="absolute inset-y-0 right-0 bg-white">
         <nav className="flex">
-          <Heading text="??????" href="#all-news" onClick={handleAllNewsClick} />
-          <Heading text="?????" href="#home" />
-          <Heading text="?????" href="#about" />
-          <Heading text="???" href="#services" />
-          <Heading text="????" href="#contact" />
-          <Heading text="????????? ????" href="#get-started" />
+          <Heading text="Новини" href="#all-news" onClick={handleAllNewsClick} />
+          <Heading text="Лорем" href="#home" />
+          <Heading text="Ипсум" href="#about" />
+          <Heading text="Долор" href="#services" />
+          <Heading text="Сит" href="#contact" />
+          <Heading text="Амет" href="#get-started" />
           <Heading text="Get Started" href="#get-started" isCta />
         </nav>
       </div>

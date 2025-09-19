@@ -1,4 +1,4 @@
-﻿import { newsItems } from "./data/news";
+﻿import { newsItems } from "../data/news";
 
 const resolveImageSrc = (src) => {
   if (!src) return "";

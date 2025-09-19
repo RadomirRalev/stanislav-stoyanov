@@ -1,12 +1,12 @@
 ﻿import { useState } from "react";
 import GreenQuoteSection from "./elements/GreenQuoteSection";
-import Header from "./elements/Header";
-import NewsSection from "./elements/NewsSection";
-import Footer from "./elements/Footer";
-import SocialBridge from "./elements/SocialBridge";
-import YouTubeShowcase from "./elements/YouTubeShowcase";
-import AllNewsSection from "./elements/AllNewsSection";
-import UpcomingEvents from "./elements/UpcomingEvents";
+import Header from "./elements/header/Header";
+import NewsSection from "./elements/articles/NewsSection";
+import Footer from "./elements/footer/Footer";
+import SocialBridge from "./elements/socialnetworks/SocialBridge";
+import YouTubeShowcase from "./elements/videos/YouTubeShowcase";
+import AllNewsSection from "./elements/articles/AllNewsSection";
+import UpcomingEvents from "./elements/upcomingevents/UpcomingEvents";
 
 export default function App() {
   const [showAllNews, setShowAllNews] = useState(false);
@@ -15,7 +15,9 @@ export default function App() {
     <div className="min-h-screen w-full">
       <section
         className="relative w-full min-h-[90vh] bg-cover bg-top bg-no-repeat"
-        style={{ backgroundImage: `url(${import.meta.env.BASE_URL}background.jpg)` }}
+        style={{
+          backgroundImage: `url(${import.meta.env.BASE_URL}background.jpg)`,
+        }}
       >
         <Header onShowAllNews={() => setShowAllNews(true)} />
         <div
@@ -35,9 +37,7 @@ export default function App() {
         <NewsSection />
       </section>
 
-      {showAllNews && (
-        <AllNewsSection onClose={() => setShowAllNews(false)} />
-      )}
+      {showAllNews && <AllNewsSection onClose={() => setShowAllNews(false)} />}
 
       <YouTubeShowcase />
 

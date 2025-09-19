@@ -1,4 +1,4 @@
-﻿import { newsItems } from "./data/news";
+﻿import { newsItems } from "../data/news";
 
 const resolveImageSrc = (src) => {
   if (!src) return "";
@@ -26,8 +26,8 @@ const AllNewsSection = ({ onClose }) => {
               All Updates From The Campaign Trail
             </h2>
             <p className="mt-2 text-sm text-green-800/80 md:text-base">
-              Browse the latest statements, recaps, and announcements in one place. Tap any
-              headline to read the full story.
+              Browse the latest statements, recaps, and announcements in one
+              place. Tap any headline to read the full story.
             </p>
           </header>
 
@@ -57,7 +57,10 @@ const AllNewsSection = ({ onClose }) => {
                   loading="lazy"
                 />
               ) : (
-                <div className="h-48 w-full bg-emerald-100" aria-hidden="true" />
+                <div
+                  className="h-48 w-full bg-emerald-100"
+                  aria-hidden="true"
+                />
               )}
 
               <div className="flex flex-1 flex-col gap-3 p-5 text-green-900">
