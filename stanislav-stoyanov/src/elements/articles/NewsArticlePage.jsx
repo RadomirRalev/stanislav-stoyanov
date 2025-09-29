@@ -1,6 +1,50 @@
-﻿import { useEffect, useMemo, useState } from "react";
+﻿import { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
-import { fetchNewsBySlug } from "../../lib/newsQueries.js";
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import { BLOCKS, INLINES, MARKS } from "@contentful/rich-text-types";
+import newsData from "../../generated/news.json";
+
+const ARTICLES = (Array.isArray(newsData?.items) ? newsData.items : []).map((article) => ({
+  ...article,
+  heroImageUrl: article.heroImage?.url ?? "",
+  heroImageAlt: article.heroImage?.alt ?? "",
+}));
+
+const richTextOptions = {
+  renderMark: {
+    [MARKS.BOLD]: (text) => <strong>{text}</strong>,
+    [MARKS.ITALIC]: (text) => <em>{text}</em>,
+    [MARKS.UNDERLINE]: (text) => <span className="underline">{text}</span>,
+  },
+  renderNode: {
+    [BLOCKS.PARAGRAPH]: (_node, children) => (
+      <p className="text-pretty">{children}</p>
+    ),
+    [BLOCKS.HEADING_2]: (_node, children) => (
+      <h2 className="mt-12 text-2xl font-semibold tracking-wide text-emerald-900">{children}</h2>
+    ),
+    [BLOCKS.HEADING_3]: (_node, children) => (
+      <h3 className="mt-10 text-xl font-semibold tracking-wide text-emerald-900">{children}</h3>
+    ),
+    [BLOCKS.UL_LIST]: (_node, children) => (
+      <ul className="list-disc space-y-3 pl-6 text-pretty">{children}</ul>
+    ),
+    [BLOCKS.OL_LIST]: (_node, children) => (
+      <ol className="list-decimal space-y-3 pl-6 text-pretty">{children}</ol>
+    ),
+    [BLOCKS.LIST_ITEM]: (_node, children) => <li>{children}</li>,
+    [INLINES.HYPERLINK]: (node, children) => (
+      <a
+        href={node.data.uri}
+        className="text-emerald-700 underline underline-offset-4 transition hover:text-emerald-900"
+        target={node.data.uri?.startsWith("http") ? "_blank" : undefined}
+        rel={node.data.uri?.startsWith("http") ? "noopener noreferrer" : undefined}
+      >
+        {children}
+      </a>
+    ),
+  },
+};
 
 const resolveImageSrc = (src) => {
   if (!src) return "";
@@ -18,78 +62,33 @@ const formatPublishedDate = (isoDate) => {
   }).format(date);
 };
 
+const buildParagraphs = (article) => {
+  if (!article) return [];
+  if (Array.isArray(article.body) && article.body.length > 0) return article.body;
+  if (typeof article.body === "string" && article.body.trim()) return [article.body];
+  return [article.excerpt].filter(Boolean);
+};
+
 const NewsArticlePage = () => {
   const { slug } = useParams();
-  const [{ loading, article, error }, setState] = useState({
-    loading: true,
-    article: null,
-    error: null,
-  });
+  const article = useMemo(
+    () => ARTICLES.find((item) => item.slug === slug),
+    [slug],
+  );
 
-  useEffect(() => {
-    let cancelled = false;
+  const fallbackParagraphs = useMemo(() => buildParagraphs(article), [article]);
 
-    const loadArticle = async () => {
-      if (!slug) {
-        setState({ loading: false, article: null, error: null });
-        return;
-      }
-
-      setState((prev) => ({ ...prev, loading: true, error: null }));
-
-      try {
-        const entry = await fetchNewsBySlug(slug);
-        if (!cancelled) {
-          setState({ loading: false, article: entry, error: null });
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setState({
-            loading: false,
-            article: null,
-            error: err instanceof Error ? err.message : "Нещо се обърка.",
-          });
-        }
-      }
-    };
-
-    loadArticle();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [slug]);
-
-  const bodyParagraphs = useMemo(() => {
-    if (!article) return [];
-    if (Array.isArray(article.body) && article.body.length > 0) return article.body;
-    if (typeof article.body === "string" && article.body.trim()) return [article.body];
-    return [article.excerpt].filter(Boolean);
-  }, [article]);
-
-  if (loading) {
-    return (
-      <main className="mx-auto max-w-4xl px-6 py-16 text-center text-green-900">
-        <p className="text-lg">Зареждане на статията…</p>
-      </main>
-    );
-  }
-
-  if (error) {
-    return (
-      <main className="mx-auto max-w-4xl px-6 py-16 text-center text-green-900">
-        <h1 className="text-3xl font-bold">Възникна проблем</h1>
-        <p className="mt-4">{error}</p>
-        <Link
-          to="/news"
-          className="mt-6 inline-flex items-center gap-2 text-emerald-700 hover:text-emerald-900"
-        >
-          <span aria-hidden="true">&larr;</span>
-          <span>Назад към архива</span>
-        </Link>
-      </main>
-    );
-  }
+  const richTextContent = useMemo(() => {
+    if (!article) return null;
+    if (article.rawBody) {
+      return documentToReactComponents(article.rawBody, richTextOptions);
+    }
+    return fallbackParagraphs.map((paragraph, index) => (
+      <p key={index} className="text-pretty">
+        {paragraph}
+      </p>
+    ));
+  }, [article, fallbackParagraphs]);
 
   if (!article) {
     return (
@@ -124,7 +123,7 @@ const NewsArticlePage = () => {
             <figure className="mt-8 overflow-hidden shadow-xl">
               <img
                 src={resolveImageSrc(article.heroImageUrl)}
-                alt={article.heroImageAlt ?? ""}
+                alt={article.heroImageAlt}
                 className="w-full object-cover object-top"
                 loading="lazy"
               />
@@ -132,12 +131,8 @@ const NewsArticlePage = () => {
           )}
         </header>
 
-        <section className="mt-10 space-y-7 font-sans text-[1.25rem] leading-[2.1rem] text-emerald-900 md:text-[1.45rem] md:leading-[2.6rem]">
-          {bodyParagraphs.map((paragraph, index) => (
-            <p key={index} className="text-pretty">
-              {paragraph}
-            </p>
-          ))}
+        <section className="article-content mt-10 space-y-7 font-sans text-[1.25rem] leading-[2.1rem] text-emerald-900 md:text-[1.45rem] md:leading-[2.6rem]">
+          {richTextContent}
         </section>
 
         <nav className="mt-12">

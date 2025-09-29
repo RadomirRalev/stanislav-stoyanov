@@ -1,7 +1,6 @@
-﻿import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+﻿import { Link } from "react-router-dom";
 import Footer from "../footer/Footer";
-import { fetchLatestNews } from "../../lib/newsQueries.js";
+import newsData from "../../generated/news.json";
 
 const resolveImageSrc = (src) => {
   if (!src) return "";
@@ -34,49 +33,16 @@ const extractLeadBlurb = (article) => {
   return sentence.endsWith(".") ? sentence : `${sentence}.`;
 };
 
+const NORMALIZED_ARTICLES = (Array.isArray(newsData?.items) ? newsData.items : []).map((article) => ({
+  ...article,
+  heroImageUrl: article.heroImage?.url ?? "",
+  heroImageAlt: article.heroImage?.alt ?? "",
+}));
+
 export default function NewsSection({ showBackLink = true } = {}) {
-  const [{ loading, items, error }, setState] = useState({
-    loading: true,
-    items: [],
-    error: null,
-  });
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const loadNews = async () => {
-      setState((prev) => ({ ...prev, loading: true, error: null }));
-      try {
-        const latest = await fetchLatestNews({ limit: 5 });
-        if (!cancelled) {
-          setState({ loading: false, items: latest, error: null });
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setState({
-            loading: false,
-            items: [],
-            error: err instanceof Error ? err.message : "Неуспешно зареждане на новините.",
-          });
-        }
-      }
-    };
-
-    loadNews();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const { lead, secondaryItems, leadBlurb } = useMemo(() => {
-    if (!items.length) return { lead: null, secondaryItems: [], leadBlurb: null };
-    const [first, ...rest] = items;
-    return {
-      lead: first,
-      secondaryItems: rest.slice(0, 4),
-      leadBlurb: extractLeadBlurb(first),
-    };
-  }, [items]);
+  const lead = NORMALIZED_ARTICLES[0] ?? null;
+  const secondaryItems = NORMALIZED_ARTICLES.slice(1, 5);
+  const leadBlurb = extractLeadBlurb(lead);
 
   return (
     <>
@@ -99,28 +65,20 @@ export default function NewsSection({ showBackLink = true } = {}) {
             </div>
           )}
 
-          {loading && (
-            <p className="mt-10 text-sm text-green-800/80">Зареждане на новини…</p>
-          )}
-
-          {error && !loading && (
-            <p className="mt-10 text-sm text-red-600">
-              {error} Опитайте отново по-късно.
-            </p>
-          )}
-
-          {!loading && !error && lead && (
+          {lead ? (
             <>
               <Link
                 to={`/news/${lead.slug}`}
                 className="group relative mt-10 block overflow-hidden bg-gray-900 shadow-2xl"
               >
-                <img
-                  src={resolveImageSrc(lead.heroImageUrl)}
-                  alt={lead.heroImageAlt ?? ""}
-                  className="h-96 w-full object-cover object-top transition duration-700 group-hover:scale-105"
-                  loading="lazy"
-                />
+                {lead.heroImageUrl && (
+                  <img
+                    src={resolveImageSrc(lead.heroImageUrl)}
+                    alt={lead.heroImageAlt}
+                    className="h-96 w-full object-cover object-top transition duration-700 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                )}
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/80 to-transparent p-8 text-white">
                   <time className="text-xs font-semibold uppercase tracking-[0.4em] text-green-200/80">
                     {formatPublishedDate(lead.publishedAt)}
@@ -143,7 +101,7 @@ export default function NewsSection({ showBackLink = true } = {}) {
                       {item.heroImageUrl ? (
                         <img
                           src={resolveImageSrc(item.heroImageUrl)}
-                          alt={item.heroImageAlt ?? ""}
+                          alt={item.heroImageAlt}
                           className="h-72 w-full object-cover object-top transition duration-700 group-hover:scale-105"
                           loading="lazy"
                         />
@@ -161,9 +119,7 @@ export default function NewsSection({ showBackLink = true } = {}) {
                 </div>
               )}
             </>
-          )}
-
-          {!loading && !error && !lead && (
+          ) : (
             <p className="mt-10 text-sm text-green-800/80">
               Все още няма публикувани новини.
             </p>

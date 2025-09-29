@@ -1,6 +1,5 @@
-﻿import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { fetchNewsList } from "../../lib/newsQueries.js";
+﻿import { Link } from "react-router-dom";
+import newsData from "../../generated/news.json";
 
 const resolveImageSrc = (src) => {
   if (!src) return "";
@@ -18,41 +17,25 @@ const formatPublishedDate = (isoDate) => {
   }).format(date);
 };
 
+const ARTICLES = (Array.isArray(newsData?.items) ? newsData.items : []).map((article) => ({
+  ...article,
+  heroImageUrl: article.heroImage?.url ?? "",
+  heroImageAlt: article.heroImage?.alt ?? "",
+}));
+
 const AllNewsSection = ({ onClose }) => {
-  const [{ loading, items, error }, setState] = useState({
-    loading: true,
-    items: [],
-    error: null,
-  });
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const loadNews = async () => {
-      setState((prev) => ({ ...prev, loading: true, error: null }));
-
-      try {
-        const response = await fetchNewsList({ limit: 50 });
-        if (!cancelled) {
-          setState({ loading: false, items: response.items, error: null });
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setState({
-            loading: false,
-            items: [],
-            error: err instanceof Error ? err.message : "Неуспешно зареждане.",
-          });
-        }
-      }
-    };
-
-    loadNews();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  if (!ARTICLES.length) {
+    return (
+      <section
+        id="all-news"
+        className="bg-gradient-to-b from-white via-emerald-50 to-emerald-100 py-16"
+      >
+        <div className="mx-auto max-w-6xl px-6 md:px-12">
+          <p className="text-sm text-green-800/80">Все още няма публикувани новини.</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -69,8 +52,7 @@ const AllNewsSection = ({ onClose }) => {
               Всички обновления от кампанията
             </h2>
             <p className="mt-2 text-sm text-green-800/80 md:text-base">
-              Разгледайте последните изявления и новини. Изберете заглавие за
-              повече информация.
+              Разгледайте последните изявления и новини. Изберете заглавие за повече информация.
             </p>
           </header>
 
@@ -85,50 +67,38 @@ const AllNewsSection = ({ onClose }) => {
           )}
         </div>
 
-        {loading && (
-          <p className="mt-10 text-sm text-green-800/80">Зареждане на новини…</p>
-        )}
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {ARTICLES.map((item) => (
+            <Link
+              key={item.slug}
+              to={`/news/${item.slug}`}
+              className="group flex h-full flex-col overflow-hidden border border-emerald-200/70 bg-white/90 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-emerald-400/80"
+            >
+              {item.heroImageUrl ? (
+                <img
+                  src={resolveImageSrc(item.heroImageUrl)}
+                  alt={item.heroImageAlt}
+                  className="h-48 w-full object-cover object-top"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="h-48 w-full bg-emerald-100" aria-hidden="true" />
+              )}
 
-        {error && !loading && (
-          <p className="mt-10 text-sm text-red-600">
-            {error} Опитайте отново по-късно.
-          </p>
-        )}
-
-        {!loading && !error && (
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {items.map((item) => (
-              <Link
-                key={item.slug}
-                to={`/news/${item.slug}`}
-                className="group flex h-full flex-col overflow-hidden border border-emerald-200/70 bg-white/90 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-emerald-400/80"
-              >
-                {item.heroImageUrl ? (
-                  <img
-                    src={resolveImageSrc(item.heroImageUrl)}
-                    alt={item.heroImageAlt ?? ""}
-                    className="h-48 w-full object-cover object-top"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="h-48 w-full bg-emerald-100" aria-hidden="true" />
-                )}
-
-                <div className="flex flex-1 flex-col gap-3 p-5 text-green-900">
-                  <time className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-700/80">
-                    {formatPublishedDate(item.publishedAt)}
-                  </time>
-                  <h3 className="text-lg font-semibold leading-snug group-hover:text-emerald-700">
-                    {item.title}
-                  </h3>
-                  <p className="text-sm text-green-800/80 line-clamp-3">
-                    {item.excerpt}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
+              <div className="flex flex-1 flex-col gap-3 p-5 text-green-900">
+                <time className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-700/80">
+                  {formatPublishedDate(item.publishedAt)}
+                </time>
+                <h3 className="text-lg font-semibold leading-snug group-hover:text-emerald-700">
+                  {item.title}
+                </h3>
+                <p className="text-sm text-green-800/80 line-clamp-3">
+                  {item.excerpt}
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
     </section>
   );
