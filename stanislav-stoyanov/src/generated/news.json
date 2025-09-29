@@ -196,6 +196,8 @@
         "_id": "image-f5fa4418237bc6805ac828f5787d04bc1e1252f6-925x520-jpg",
         "url": "https://cdn.sanity.io/images/aps4qxtx/production/f5fa4418237bc6805ac828f5787d04bc1e1252f6-925x520.jpg"
       }
-    }
+    },
+    "imageSrc": "https://cdn.sanity.io/images/aps4qxtx/production/f5fa4418237bc6805ac828f5787d04bc1e1252f6-925x520.jpg",
+    "imageAlt": "Пробна снимка"
   }
 ]

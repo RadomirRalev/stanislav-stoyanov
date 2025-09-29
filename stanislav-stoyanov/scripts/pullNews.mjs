@@ -33,20 +33,29 @@ const query = groq`*[_type == "newsArticle"] | order(date desc) {
 
 const data = await client.fetch(query);
 
-const mapped = data.map((item) => ({
-  id: item._id,
-  title: item.title,
-  subtitle: item.subtitle,
-  slug: item.slug,
-  date: item.date,
-  excerpt: item.excerpt,
-  body: item.body,
-  image: item.mainImage,
-}));
+const mapped = data.map((item) => {
+  const image = item.mainImage;
+  const imageUrl = image?.asset?.url || "";
+  const imageAlt = image?.altText || "";
+
+  return {
+    id: item._id,
+    title: item.title,
+    subtitle: item.subtitle,
+    slug: item.slug,
+    date: item.date,
+    excerpt: item.excerpt,
+    body: Array.isArray(item.body) ? item.body : [],
+    image,
+    imageSrc: imageUrl,
+    imageAlt,
+  };
+});
 
 const outDir = path.resolve("src/generated");
 if (!fs.existsSync(outDir)) {
   fs.mkdirSync(outDir, { recursive: true });
 }
+
 fs.writeFileSync(path.join(outDir, "news.json"), JSON.stringify(mapped, null, 2));
 console.log(`Saved ${mapped.length} articles from Sanity`);

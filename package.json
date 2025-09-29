@@ -7,5 +7,11 @@
   },
   "scripts": {
     "prepare": "husky"
+  },
+  "dependencies": {
+    "@portabletext/react": "^4.0.3",
+    "@sanity/client": "^7.11.2",
+    "@sanity/image-url": "^1.2.0",
+    "groq": "^4.10.0"
   }
 }

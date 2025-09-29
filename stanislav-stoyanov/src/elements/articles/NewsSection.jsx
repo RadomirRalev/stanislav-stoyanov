@@ -1,8 +1,9 @@
-﻿import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { newsItems } from "../data/news";
 import Footer from "../footer/Footer";
+import { urlFor } from "../../lib/imageBuilder";
 
-const resolveImageSrc = (src) => {
+const resolveLegacyImageSrc = (src) => {
   if (!src) return "";
   if (/^https?:\/\//i.test(src)) return src;
   const normalized = src.replace(/^\/+/, "");
@@ -10,6 +11,16 @@ const resolveImageSrc = (src) => {
     ? normalized.slice("public/".length)
     : normalized;
   return `${import.meta.env.BASE_URL}${withoutPublic}`;
+};
+
+const buildImageUrl = (image, fallbackSrc, { width, height, fit = "crop" } = {}) => {
+  if (image) {
+    let builder = urlFor(image).auto("format");
+    if (width) builder = builder.width(width);
+    if (height) builder = builder.height(height).fit(fit);
+    return builder.url();
+  }
+  return resolveLegacyImageSrc(fallbackSrc);
 };
 
 export default function NewsSection({ showBackLink = true } = {}) {
@@ -21,6 +32,10 @@ export default function NewsSection({ showBackLink = true } = {}) {
       ? leadSentenceRaw
       : `${leadSentenceRaw}.`
     : null;
+
+  const leadImageUrl = lead
+    ? buildImageUrl(lead.image, lead.imageSrc, { width: 1600 })
+    : "";
 
   return (
     <>
@@ -41,7 +56,7 @@ export default function NewsSection({ showBackLink = true } = {}) {
                 >
                   &larr;
                 </span>
-                <span>Към началото</span>
+                <span>Back to home</span>
               </Link>
             </div>
           )}
@@ -51,12 +66,16 @@ export default function NewsSection({ showBackLink = true } = {}) {
               to={`/news/${lead.slug}`}
               className="group relative mt-10 block overflow-hidden bg-gray-900 shadow-2xl"
             >
-              <img
-                src={resolveImageSrc(lead.imageSrc)}
-                alt={lead.imageAlt}
-                className="h-96 w-full object-cover object-top transition duration-700 group-hover:scale-105"
-                loading="lazy"
-              />
+              {leadImageUrl ? (
+                <img
+                  src={leadImageUrl}
+                  alt={lead.imageAlt || lead.image?.altText || lead.title}
+                  className="h-96 w-full object-cover object-top transition duration-700 group-hover:scale-105"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="h-96 w-full bg-emerald-100" aria-hidden="true" />
+              )}
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/80 to-transparent p-8 text-white">
                 <time className="text-xs font-semibold uppercase tracking-[0.4em] text-green-200/80">
                   {lead.date}
@@ -73,28 +92,42 @@ export default function NewsSection({ showBackLink = true } = {}) {
 
           {secondaryItems.length > 0 && (
             <div className="mt-12 grid gap-8 md:grid-cols-2">
-              {secondaryItems.map((item) => (
-                <Link
-                  key={`${item.id}-${item.title}`}
-                  to={`/news/${item.slug}`}
-                  className="group relative block overflow-hidden bg-gray-900 shadow-xl"
-                >
-                  <img
-                    src={resolveImageSrc(item.imageSrc)}
-                    alt={item.imageAlt}
-                    className="h-72 w-full object-cover object-top transition duration-700 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/80 to-transparent p-6 text-white">
-                    <time className="text-xs font-semibold uppercase tracking-[0.4em] text-green-200/80">
-                      {item.date}
-                    </time>
-                    <h3 className="mt-3 text-2xl font-semibold">
-                      {item.title}
-                    </h3>
-                  </div>
-                </Link>
-              ))}
+              {secondaryItems.map((item) => {
+                const itemImageUrl = buildImageUrl(item.image, item.imageSrc, {
+                  width: 800,
+                  height: 480,
+                });
+
+                return (
+                  <Link
+                    key={`${item.id}-${item.title}`}
+                    to={`/news/${item.slug}`}
+                    className="group relative block overflow-hidden bg-gray-900 shadow-xl"
+                  >
+                    {itemImageUrl ? (
+                      <img
+                        src={itemImageUrl}
+                        alt={item.imageAlt || item.image?.altText || item.title}
+                        className="h-72 w-full object-cover object-top transition duration-700 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div
+                        className="h-72 w-full bg-emerald-100"
+                        aria-hidden="true"
+                      />
+                    )}
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/80 to-transparent p-6 text-white">
+                      <time className="text-xs font-semibold uppercase tracking-[0.4em] text-green-200/80">
+                        {item.date}
+                      </time>
+                      <h3 className="mt-3 text-2xl font-semibold">
+                        {item.title}
+                      </h3>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           )}
         </div>

@@ -1,7 +1,8 @@
-﻿import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import { newsItems } from "../data/news";
+import { urlFor } from "../../lib/imageBuilder";
 
-const resolveImageSrc = (src) => {
+const resolveLegacyImageSrc = (src) => {
   if (!src) return "";
   if (/^https?:\/\//i.test(src)) return src;
   const normalized = src.replace(/^\/+/, "");
@@ -9,6 +10,16 @@ const resolveImageSrc = (src) => {
     ? normalized.slice("public/".length)
     : normalized;
   return `${import.meta.env.BASE_URL}${withoutPublic}`;
+};
+
+const buildImageUrl = (image, fallbackSrc, { width, height, fit = "crop" } = {}) => {
+  if (image) {
+    let builder = urlFor(image).auto("format");
+    if (width) builder = builder.width(width);
+    if (height) builder = builder.height(height).fit(fit);
+    return builder.url();
+  }
+  return resolveLegacyImageSrc(fallbackSrc);
 };
 
 const AllNewsSection = ({ onClose }) => {
@@ -44,39 +55,46 @@ const AllNewsSection = ({ onClose }) => {
         </div>
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {newsItems.map((item, index) => (
-            <Link
-              key={`${item.id}-${index}`}
-              to={`/news/${item.slug}`}
-              className="group flex h-full flex-col overflow-hidden border border-emerald-200/70 bg-white/90 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-emerald-400/80"
-            >
-              {item.imageSrc ? (
-                <img
-                  src={resolveImageSrc(item.imageSrc)}
-                  alt={item.imageAlt}
-                  className="h-48 w-full object-cover object-top"
-                  loading="lazy"
-                />
-              ) : (
-                <div
-                  className="h-48 w-full bg-emerald-100"
-                  aria-hidden="true"
-                />
-              )}
+          {newsItems.map((item, index) => {
+            const imageUrl = buildImageUrl(item.image, item.imageSrc, {
+              width: 600,
+              height: 360,
+            });
 
-              <div className="flex flex-1 flex-col gap-3 p-5 text-green-900">
-                <time className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-700/80">
-                  {item.date}
-                </time>
-                <h3 className="text-lg font-semibold leading-snug group-hover:text-emerald-700">
-                  {item.title}
-                </h3>
-                <p className="text-sm text-green-800/80 line-clamp-3">
-                  {item.excerpt}
-                </p>
-              </div>
-            </Link>
-          ))}
+            return (
+              <Link
+                key={`${item.id}-${index}`}
+                to={`/news/${item.slug}`}
+                className="group flex h-full flex-col overflow-hidden border border-emerald-200/70 bg-white/90 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-emerald-400/80"
+              >
+                {imageUrl ? (
+                  <img
+                    src={imageUrl}
+                    alt={item.imageAlt || item.image?.altText || item.title}
+                    className="h-48 w-full object-cover object-top"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div
+                    className="h-48 w-full bg-emerald-100"
+                    aria-hidden="true"
+                  />
+                )}
+
+                <div className="flex flex-1 flex-col gap-3 p-5 text-green-900">
+                  <time className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-700/80">
+                    {item.date}
+                  </time>
+                  <h3 className="text-lg font-semibold leading-snug group-hover:text-emerald-700">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-green-800/80 line-clamp-3">
+                    {item.excerpt}
+                  </p>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>

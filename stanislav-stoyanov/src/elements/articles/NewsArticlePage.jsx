@@ -13,7 +13,7 @@ const resolveLegacyImageSrc = (src) => {
   const withoutPublic = normalized.startsWith("public/")
     ? normalized.slice("public/".length)
     : normalized;
-    return `${import.meta.env.BASE_URL}${withoutPublic}`;
+  return `${import.meta.env.BASE_URL}${withoutPublic}`;
 };
 
 const NewsArticlePage = () => {
@@ -153,3 +153,4 @@ const NewsArticlePage = () => {
 };
 
 export default NewsArticlePage;
+
