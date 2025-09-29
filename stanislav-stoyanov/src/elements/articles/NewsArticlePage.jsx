@@ -1,60 +1,130 @@
-﻿import { Link, useParams } from "react-router-dom";
-import { getNewsBySlug } from "../data/news";
+﻿import { useEffect, useMemo, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { fetchNewsBySlug } from "../../lib/newsQueries.js";
 
 const resolveImageSrc = (src) => {
   if (!src) return "";
-  if (/^https?:\/\//i.test(src)) return src;
-  const normalized = src.replace(/^\/+/, "");
-  const withoutPublic = normalized.startsWith("public/")
-    ? normalized.slice("public/".length)
-    : normalized;
-  return `${import.meta.env.BASE_URL}${withoutPublic}`;
+  return /^https?:\/\//i.test(src) ? src : `https:${src.replace(/^\/+/, "")}`;
+};
+
+const formatPublishedDate = (isoDate) => {
+  if (!isoDate) return "";
+  const date = new Date(isoDate);
+  if (Number.isNaN(date.getTime())) return isoDate;
+  return new Intl.DateTimeFormat("bg-BG", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  }).format(date);
 };
 
 const NewsArticlePage = () => {
   const { slug } = useParams();
-  const article = getNewsBySlug(slug);
+  const [{ loading, article, error }, setState] = useState({
+    loading: true,
+    article: null,
+    error: null,
+  });
 
-  if (!article) {
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadArticle = async () => {
+      if (!slug) {
+        setState({ loading: false, article: null, error: null });
+        return;
+      }
+
+      setState((prev) => ({ ...prev, loading: true, error: null }));
+
+      try {
+        const entry = await fetchNewsBySlug(slug);
+        if (!cancelled) {
+          setState({ loading: false, article: entry, error: null });
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setState({
+            loading: false,
+            article: null,
+            error: err instanceof Error ? err.message : "Нещо се обърка.",
+          });
+        }
+      }
+    };
+
+    loadArticle();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [slug]);
+
+  const bodyParagraphs = useMemo(() => {
+    if (!article) return [];
+    if (Array.isArray(article.body) && article.body.length > 0) return article.body;
+    if (typeof article.body === "string" && article.body.trim()) return [article.body];
+    return [article.excerpt].filter(Boolean);
+  }, [article]);
+
+  if (loading) {
     return (
       <main className="mx-auto max-w-4xl px-6 py-16 text-center text-green-900">
-        <h1 className="text-3xl font-bold">Article not found</h1>
-        <p className="mt-4">
-          The piece you are looking for does not exist or has been moved.
-        </p>
+        <p className="text-lg">Зареждане на статията…</p>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="mx-auto max-w-4xl px-6 py-16 text-center text-green-900">
+        <h1 className="text-3xl font-bold">Възникна проблем</h1>
+        <p className="mt-4">{error}</p>
         <Link
           to="/news"
           className="mt-6 inline-flex items-center gap-2 text-emerald-700 hover:text-emerald-900"
         >
           <span aria-hidden="true">&larr;</span>
-          <span>Back to news archive</span>
+          <span>Назад към архива</span>
         </Link>
       </main>
     );
   }
 
-  const bodyParagraphs = Array.isArray(article.body) && article.body.length > 0
-    ? article.body
-    : [article.excerpt].filter(Boolean);
+  if (!article) {
+    return (
+      <main className="mx-auto max-w-4xl px-6 py-16 text-center text-green-900">
+        <h1 className="text-3xl font-bold">Статията не е намерена</h1>
+        <p className="mt-4">Съдържанието е премахнато или преместено.</p>
+        <Link
+          to="/news"
+          className="mt-6 inline-flex items-center gap-2 text-emerald-700 hover:text-emerald-900"
+        >
+          <span aria-hidden="true">&larr;</span>
+          <span>Назад към архива</span>
+        </Link>
+      </main>
+    );
+  }
 
   return (
     <article className="bg-gradient-to-b from-white via-emerald-50 to-emerald-100 py-16 text-green-900">
       <div className="mx-auto max-w-4xl px-6">
         <header>
           <time className="text-xs font-semibold uppercase tracking-[0.4em] text-emerald-600/80">
-            {article.date}
+            {formatPublishedDate(article.publishedAt)}
           </time>
           <h1 className="mt-4 text-4xl font-sans font-bold uppercase tracking-wide">
             {article.title}
           </h1>
           {article.subtitle && (
-            <p className="mt-3 font-style: italic text-[1.55rem] text-emerald-800">{article.subtitle}</p>
+            <p className="mt-3 italic text-[1.55rem] text-emerald-800">{article.subtitle}</p>
           )}
-          {article.imageSrc && (
+          {article.heroImageUrl && (
             <figure className="mt-8 overflow-hidden shadow-xl">
               <img
-                src={resolveImageSrc(article.imageSrc)}
-                alt={article.imageAlt}
+                src={resolveImageSrc(article.heroImageUrl)}
+                alt={article.heroImageAlt ?? ""}
                 className="w-full object-cover object-top"
                 loading="lazy"
               />
@@ -76,7 +146,7 @@ const NewsArticlePage = () => {
             className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.35em] text-emerald-700 hover:text-emerald-900"
           >
             <span aria-hidden="true">&larr;</span>
-            <span>Към новините</span>
+            <span>Назад към новините</span>
           </Link>
         </nav>
       </div>
@@ -85,4 +155,3 @@ const NewsArticlePage = () => {
 };
 
 export default NewsArticlePage;
-
