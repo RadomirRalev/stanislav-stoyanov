@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+﻿name: Deploy to GitHub Pages
 
 on:
   push:
@@ -17,6 +17,10 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
+    env:
+      CONTENTFUL_SPACE_ID: ${{ secrets.CONTENTFUL_SPACE_ID }}
+      CONTENTFUL_DELIVERY_TOKEN: ${{ secrets.CONTENTFUL_DELIVERY_TOKEN }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -31,6 +35,10 @@ jobs:
       - name: Install dependencies
         working-directory: stanislav-stoyanov
         run: npm ci
+
+      - name: Pull news from Contentful
+        working-directory: stanislav-stoyanov
+        run: npm run pull:news
 
       - name: Build site
         working-directory: stanislav-stoyanov

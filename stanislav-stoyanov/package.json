@@ -8,10 +8,16 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prepare": "husky"
+    "prepare": "husky",
+    "pull:news": "node scripts/pullNews.mjs",
+    "predev": "npm run pull:news",
+    "prebuild": "npm run pull:news"
   },
   "dependencies": {
+    "@contentful/rich-text-react-renderer": "^16.1.5",
+    "@contentful/rich-text-types": "^17.2.4",
     "@tailwindcss/vite": "^4.1.12",
+    "contentful": "^11.8.1",
     "lucide-react": "^0.542.0",
     "motion": "^12.23.12",
     "react": "^19.1.1",
@@ -31,6 +37,7 @@
     "@types/react-dom": "^19.1.7",
     "@vitejs/plugin-react": "^5.0.0",
     "autoprefixer": "^10.4.21",
+    "dotenv": "^17.2.2",
     "eslint": "^9.33.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",

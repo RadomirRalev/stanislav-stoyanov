@@ -1,17 +1,42 @@
-﻿import { Link } from 'react-router-dom';
-import { newsItems } from "../data/news";
+﻿import { Link } from "react-router-dom";
+import newsData from "../../generated/news.json";
 
 const resolveImageSrc = (src) => {
   if (!src) return "";
-  if (/^https?:\/\//i.test(src)) return src;
-  const normalized = src.replace(/^\/+/, "");
-  const withoutPublic = normalized.startsWith("public/")
-    ? normalized.slice("public/".length)
-    : normalized;
-  return `${import.meta.env.BASE_URL}${withoutPublic}`;
+  return /^https?:\/\//i.test(src) ? src : `https:${src.replace(/^\/+/, "")}`;
 };
 
+const formatPublishedDate = (isoDate) => {
+  if (!isoDate) return "";
+  const date = new Date(isoDate);
+  if (Number.isNaN(date.getTime())) return isoDate;
+  return new Intl.DateTimeFormat("bg-BG", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  }).format(date);
+};
+
+const ARTICLES = (Array.isArray(newsData?.items) ? newsData.items : []).map((article) => ({
+  ...article,
+  heroImageUrl: article.heroImage?.url ?? "",
+  heroImageAlt: article.heroImage?.alt ?? "",
+}));
+
 const AllNewsSection = ({ onClose }) => {
+  if (!ARTICLES.length) {
+    return (
+      <section
+        id="all-news"
+        className="bg-gradient-to-b from-white via-emerald-50 to-emerald-100 py-16"
+      >
+        <div className="mx-auto max-w-6xl px-6 md:px-12">
+          <p className="text-sm text-green-800/80">Все още няма публикувани новини.</p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section
       id="all-news"
@@ -21,14 +46,13 @@ const AllNewsSection = ({ onClose }) => {
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <header className="max-w-3xl text-green-900">
             <p className="text-xs font-semibold uppercase tracking-[0.4em] text-emerald-600/70">
-              News Archive
+              Архив с новини
             </p>
             <h2 className="mt-3 text-3xl font-bold uppercase tracking-wide md:text-4xl">
-              All Updates From The Campaign Trail
+              Всички обновления от кампанията
             </h2>
             <p className="mt-2 text-sm text-green-800/80 md:text-base">
-              Browse the latest statements, recaps, and announcements in one
-              place. Tap any headline to read the full story.
+              Разгледайте последните изявления и новини. Изберете заглавие за повече информация.
             </p>
           </header>
 
@@ -38,35 +62,32 @@ const AllNewsSection = ({ onClose }) => {
               onClick={onClose}
               className="self-start rounded-full border border-emerald-500 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-emerald-700 transition hover:bg-emerald-600 hover:text-white"
             >
-              Close
+              Затвори
             </button>
           )}
         </div>
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {newsItems.map((item, index) => (
+          {ARTICLES.map((item) => (
             <Link
-              key={`${item.id}-${index}`}
+              key={item.slug}
               to={`/news/${item.slug}`}
               className="group flex h-full flex-col overflow-hidden border border-emerald-200/70 bg-white/90 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-emerald-400/80"
             >
-              {item.imageSrc ? (
+              {item.heroImageUrl ? (
                 <img
-                  src={resolveImageSrc(item.imageSrc)}
-                  alt={item.imageAlt}
+                  src={resolveImageSrc(item.heroImageUrl)}
+                  alt={item.heroImageAlt}
                   className="h-48 w-full object-cover object-top"
                   loading="lazy"
                 />
               ) : (
-                <div
-                  className="h-48 w-full bg-emerald-100"
-                  aria-hidden="true"
-                />
+                <div className="h-48 w-full bg-emerald-100" aria-hidden="true" />
               )}
 
               <div className="flex flex-1 flex-col gap-3 p-5 text-green-900">
                 <time className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-700/80">
-                  {item.date}
+                  {formatPublishedDate(item.publishedAt)}
                 </time>
                 <h3 className="text-lg font-semibold leading-snug group-hover:text-emerald-700">
                   {item.title}
