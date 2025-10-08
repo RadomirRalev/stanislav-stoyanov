@@ -89,6 +89,16 @@ const YouTubeShowcase = () => {
               />
             </div>
           </div>
+          <div className="flex justify-center">
+            <a
+              href={`https://www.youtube.com/watch?v=${selectedVideo.youtubeId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-6 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-emerald-950 shadow-lg transition hover:bg-emerald-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-200"
+            >
+              Сподели
+            </a>
+          </div>
         </div>
       ) : (
         <div className="mx-auto max-w-7xl px-6 md:px-12">
