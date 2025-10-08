@@ -92,7 +92,7 @@ const YouTubeShowcase = () => {
     window.open(shareUrl, "_blank", "noopener,noreferrer");
   }, [selectedVideo]);
 
-  const sectionPadding = selectedVideo ? "py-24 md:py-36" : "py-16";
+  const sectionPadding = selectedVideo ? "py-12 md:py-16" : "py-16";
 
   return (
     <section
@@ -100,7 +100,7 @@ const YouTubeShowcase = () => {
     >
       {selectedVideo ? (
         <div
-          className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 md:px-12"
+          className="mx-auto flex w-full max-w-6xl flex-col gap-4 md:gap-5 px-6 md:px-12"
           role="dialog"
           aria-modal="true"
           aria-label={selectedVideo.title}
