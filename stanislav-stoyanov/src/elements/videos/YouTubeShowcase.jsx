@@ -23,6 +23,7 @@ const videos = [
 
 const YouTubeShowcase = () => {
   const [selectedVideoId, setSelectedVideoId] = useState(null);
+  const [shareFeedback, setShareFeedback] = useState("");
 
   const selectedVideo = useMemo(
     () => videos.find((video) => video.youtubeId === selectedVideoId) ?? null,
@@ -35,6 +36,7 @@ const YouTubeShowcase = () => {
 
   const handleClose = useCallback(() => {
     setSelectedVideoId(null);
+    setShareFeedback("");
   }, []);
 
   useEffect(() => {
@@ -53,6 +55,43 @@ const YouTubeShowcase = () => {
     };
   }, [handleClose, selectedVideo]);
 
+  useEffect(() => {
+    if (!shareFeedback || typeof window === "undefined") return undefined;
+
+    const timeoutId = window.setTimeout(() => setShareFeedback(""), 2200);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [shareFeedback]);
+
+  const handleShare = useCallback(async () => {
+    if (!selectedVideo) return;
+
+    const shareUrl = `https://www.youtube.com/watch?v=${selectedVideo.youtubeId}`;
+
+    try {
+      if (typeof navigator !== "undefined" && navigator.share) {
+        await navigator.share({
+          title: selectedVideo.title,
+          url: shareUrl,
+        });
+        return;
+      }
+
+      if (
+        typeof navigator !== "undefined" &&
+        navigator.clipboard?.writeText
+      ) {
+        await navigator.clipboard.writeText(shareUrl);
+        setShareFeedback("Link copied to clipboard");
+        return;
+      }
+    } catch {
+      // ignore errors and fall back to opening the link
+    }
+
+    window.open(shareUrl, "_blank", "noopener,noreferrer");
+  }, [selectedVideo]);
+
   const sectionPadding = selectedVideo ? "py-24 md:py-36" : "py-16";
 
   return (
@@ -70,7 +109,7 @@ const YouTubeShowcase = () => {
             <button
               type="button"
               onClick={handleClose}
-              className="inline-flex items-center gap-2 rounded-full bg-emerald-800/70 px-5 py-2 text-sm font-semibold text-emerald-100 shadow-sm transition hover:bg-emerald-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
+              className="inline-flex items-center gap-2 bg-emerald-800/70 px-5 py-2 text-sm font-semibold text-emerald-100 shadow-sm transition hover:bg-emerald-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
               aria-label="Close video"
             >
               Затвори
@@ -89,15 +128,19 @@ const YouTubeShowcase = () => {
               />
             </div>
           </div>
-          <div className="flex justify-center">
-            <a
-              href={`https://www.youtube.com/watch?v=${selectedVideo.youtubeId}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-6 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-emerald-950 shadow-lg transition hover:bg-emerald-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-200"
+          <div className="flex flex-col items-center gap-2">
+            <button
+              type="button"
+              onClick={handleShare}
+              className="inline-flex items-center gap-2 bg-emerald-500 px-6 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-emerald-950 shadow-lg transition hover:bg-emerald-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-200"
             >
               Сподели
-            </a>
+            </button>
+            {shareFeedback && (
+              <span className="text-xs font-semibold uppercase tracking-[0.25em] text-emerald-300/90">
+                {shareFeedback}
+              </span>
+            )}
           </div>
         </div>
       ) : (
@@ -148,3 +191,5 @@ const YouTubeShowcase = () => {
 };
 
 export default YouTubeShowcase;
+
+
