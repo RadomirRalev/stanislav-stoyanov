@@ -184,11 +184,11 @@ const YouTubeShowcase = () => {
             aria-modal="true"
             aria-label={selectedVideo.title}
           >
-            <div className="flex items-center justify-between text-emerald-100">
+            <div className="flex items-center justify-end text-emerald-100">
               <button
                 type="button"
                 onClick={handleClose}
-                className="inline-flex items-center gap-2 bg-emerald-800/70 px-5 py-2 text-sm font-semibold text-emerald-100 shadow-sm transition hover:bg-emerald-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
+                className="inline-flex items-center gap-2 bg-emerald-800/70 px-6 py-3 text-base font-semibold text-emerald-100 shadow-sm transition hover:bg-emerald-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
                 aria-label="Close video"
               >
                 Затвори
