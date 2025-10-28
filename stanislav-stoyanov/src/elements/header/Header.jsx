@@ -23,19 +23,7 @@ const Heading = ({ text, to, href = "#", isCta = false, onClick }) => {
   );
 };
 
-const Header = ({ onShowAllNews }) => {
-  const handleAllNewsClick = (event) => {
-    if (!onShowAllNews) return;
-
-    event.preventDefault();
-    onShowAllNews();
-
-    setTimeout(() => {
-      document
-        .getElementById("all-news")
-        ?.scrollIntoView({ behavior: "smooth" });
-    }, 0);
-  };
+const Header = () => {
 
   return (
     <header className="relative w-full sticky top-0 z-50">

@@ -70,9 +70,10 @@ const YouTubeShowcase = () => {
 
   const selectedVideo = useMemo(() => {
     if (!selectedVideoId) return null;
-    return [...archiveVideos].find(
-      (video) => video.youtubeId === selectedVideoId,
-    ) ?? null;
+    return (
+      [...archiveVideos].find((video) => video.youtubeId === selectedVideoId) ??
+      null
+    );
   }, [selectedVideoId]);
 
   const handleSelect = useCallback((videoId, sourceView = "showcase") => {
@@ -89,12 +90,6 @@ const YouTubeShowcase = () => {
 
   const handleShowArchive = useCallback(() => {
     setView("archive");
-    setSelectedVideoId(null);
-    setShareFeedback("");
-  }, []);
-
-  const handleShowShowcase = useCallback(() => {
-    setView("showcase");
     setSelectedVideoId(null);
     setShareFeedback("");
   }, []);
@@ -143,10 +138,7 @@ const YouTubeShowcase = () => {
         return;
       }
 
-      if (
-        typeof navigator !== "undefined" &&
-        navigator.clipboard?.writeText
-      ) {
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(shareUrl);
         setShareFeedback("Link copied to clipboard");
         return;
@@ -278,20 +270,27 @@ const YouTubeShowcase = () => {
                 </h2>
               </div>
               <div className="flex flex-wrap items-center gap-3">
-                <input
-                  type="search"
-                  placeholder="Search titles"
-                  className="w-full border border-emerald-500/40 bg-emerald-900/40 px-4 py-2 text-sm text-emerald-50 placeholder:text-emerald-200/60 focus:border-emerald-300 focus:outline-none md:w-56"
-                  disabled
-                  aria-label="Search videos (coming soon)"
-                />
                 <button
-                  type="button"
-                  onClick={handleShowShowcase}
-                  className="inline-flex items-center bg-emerald-800/70 px-4 py-2 text-sm font-semibold text-emerald-50 transition hover:bg-emerald-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
+                type="button"
+                onClick={handleClose}
+                className="inline-flex h-11 w-11 items-center justify-center border border-emerald-300/40 bg-emerald-900/60 text-emerald-50 shadow-lg shadow-emerald-950/30 transition-transform duration-200 hover:-translate-y-0.5 hover:bg-emerald-800 focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-emerald-950 active:scale-95"
+                aria-label="Close video"
+              >
+                <svg
+                  className="h-4 w-4"
+                  viewBox="0 0 14 14"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                  focusable="false"
                 >
-                  Назад
-                </button>
+                  <path
+                    d="M3.22 3.22a.75.75 0 0 1 1.06 0L7 5.94l2.72-2.72a.75.75 0 1 1 1.06 1.06L8.06 7l2.72 2.72a.75.75 0 0 1-1.06 1.06L7 8.06l-2.72 2.72a.75.75 0 0 1-1.06-1.06L5.94 7 3.22 4.28a.75.75 0 0 1 0-1.06Z"
+                    fill="currentColor"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
               </div>
             </header>
 
