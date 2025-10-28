@@ -188,10 +188,23 @@ const YouTubeShowcase = () => {
               <button
                 type="button"
                 onClick={handleClose}
-                className="inline-flex items-center gap-2 bg-emerald-800/70 px-6 py-3 text-base font-semibold text-emerald-100 shadow-sm transition hover:bg-emerald-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
+                className="inline-flex h-11 w-11 items-center justify-center border border-emerald-300/40 bg-emerald-900/60 text-emerald-50 shadow-lg shadow-emerald-950/30 transition-transform duration-200 hover:-translate-y-0.5 hover:bg-emerald-800 focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-emerald-950 active:scale-95"
                 aria-label="Close video"
               >
-                Затвори
+                <svg
+                  className="h-4 w-4"
+                  viewBox="0 0 14 14"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path
+                    d="M3.22 3.22a.75.75 0 0 1 1.06 0L7 5.94l2.72-2.72a.75.75 0 1 1 1.06 1.06L8.06 7l2.72 2.72a.75.75 0 0 1-1.06 1.06L7 8.06l-2.72 2.72a.75.75 0 0 1-1.06-1.06L5.94 7 3.22 4.28a.75.75 0 0 1 0-1.06Z"
+                    fill="currentColor"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                  />
+                </svg>
               </button>
             </div>
 
