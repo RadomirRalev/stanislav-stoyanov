@@ -10,8 +10,9 @@
     "preview": "vite preview",
     "prepare": "husky",
     "pull:news": "node scripts/pullNews.mjs",
-    "predev": "npm run pull:news",
-    "prebuild": "npm run pull:news"
+    "pull:videos": "node scripts/pullVideos.mjs",
+    "predev": "npm run pull:news && npm run pull:videos",
+    "prebuild": "npm run pull:news && npm run pull:videos"
   },
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^16.1.5",
