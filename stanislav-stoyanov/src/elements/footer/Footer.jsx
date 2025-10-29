@@ -12,7 +12,10 @@ const FooterColumn = ({ title, children }) => (
 const Footer = () => {
   return (
     <footer className="relative bg-emerald-950 text-emerald-100">
-      <div className="absolute inset-x-0 -top-8 mx-auto hidden h-16 max-w-5xl rounded-full bg-emerald-600/20 blur-3xl md:block" aria-hidden />
+      <div
+        className="absolute inset-x-0 -top-8 mx-auto hidden h-16 max-w-5xl rounded-full bg-emerald-600/20 blur-3xl md:block"
+        aria-hidden
+      />
 
       <div className="mx-auto grid max-w-6xl gap-10 px-6 pb-16 pt-20 md:grid-cols-3 md:px-12">
         <div className="space-y-4">
@@ -20,15 +23,37 @@ const Footer = () => {
             Станислав Стоянов
           </p>
           <p className="text-sm text-emerald-100/70">
-            Съществуват много варианти на пасажи от Lorem Ipsum, но повечето са претърпели някаква промяна, чрез вмъкване на хумор или произволни думи.
+            За просперираща България.
+            <br />
+            За здрав разум в Европа.
+            <br />
+            За мир.
           </p>
         </div>
 
-        <FooterColumn title="Ресурси">
-          <div>Често задавани въпроси</div>
-          <div>Новини</div>
-          <div>Медиен комплект</div>
-          <div>Контакт</div>
+        <FooterColumn title="Контакт">
+          <div>
+            Parlement européen
+            <br />
+            Bât. WILLY BRANDT 02M017 60,
+            <br />
+            rue Wiertz / Wiertzstraat 60
+            <br />
+            <strong>B-1047 Bruxelles/Brussel</strong>
+            <br />
+          </div>
+          <div>
+            Parlement européen <br />
+            Bât. VACLAV HAVEL V03017 1, <br />
+            avenue du Président Robert Schuman, CS 91024
+            <br />
+            <strong>F-67070 Strasbourg Cedex</strong>
+            <br />
+          </div>
+          <div>
+            бул. Приморски 41, <br />
+            <strong>Варна 9000, България</strong> <br />
+          </div>
         </FooterColumn>
 
         <FooterColumn title="Последвай ме">
@@ -44,14 +69,18 @@ const Footer = () => {
             ))}
           </div>
           <p className="text-xs text-emerald-100/60">
-            Абонирайте се за нашия бюлетин за актуализации относно събитията в общността.
+            Абонирайте се за нашия бюлетин за актуализации относно събитията в
+            общността.
           </p>
         </FooterColumn>
       </div>
 
       <div className="border-t border-emerald-800/60">
         <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-6 text-xs text-emerald-200/60 md:flex-row md:items-center md:justify-between md:px-12">
-          <p>� {new Date().getFullYear()} Станислав Стоянов. Всички права запазени.</p>
+          <p>
+            � {new Date().getFullYear()} Станислав Стоянов. Всички права
+            запазени.
+          </p>
           <div className="flex gap-4">
             <a href="#" className="hover:text-emerald-100">
               Политика на поверителност
