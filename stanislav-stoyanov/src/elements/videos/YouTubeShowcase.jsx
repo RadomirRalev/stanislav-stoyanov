@@ -1,66 +1,110 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion as Motion } from "motion/react";
+import videosData from "../../generated/videos.json";
 
-const videos = [
-  {
-    id: "roadmap-update",
-    title: "Roadmap For Safer Neighborhoods",
-    date: "Aug 30, 2025",
-    youtubeId: "0z15Xz5k86U",
-  },
-  {
-    id: "schools-panel",
-    title: "Improving Our Schools",
-    date: "Aug 22, 2025",
-    youtubeId: "dR0FUPIfbg8",
-  },
-  {
-    id: "small-business",
-    title: "Small Business Listening Tour",
-    date: "Aug 14, 2025",
-    youtubeId: "WQbd_z1g-Jg",
-  },
-];
+const DATE_FORMATTER = new Intl.DateTimeFormat("bg-BG", { dateStyle: "medium" });
 
-const archiveVideos = [
-  ...videos,
-  {
-    id: "community-roundtable",
-    title: "Community Roundtable Highlights",
-    date: "Jul 28, 2025",
-    youtubeId: "8g1PXkB12Fo",
-  },
-  {
-    id: "policy-breakdown",
-    title: "Policy Breakdown: Affordable Housing",
-    date: "Jul 11, 2025",
-    youtubeId: "mT3xE1q4KQc",
-  },
-  {
-    id: "volunteer-drive",
-    title: "Volunteer Drive Kickoff",
-    date: "Jun 20, 2025",
-    youtubeId: "Lr9YdY5TLX8",
-  },
-  {
-    id: "townhall-recap",
-    title: "Town Hall Recap: Q&A Session",
-    date: "Jun 05, 2025",
-    youtubeId: "9Qh3TmTzuZI",
-  },
-  {
-    id: "youth-programs",
-    title: "Investing in Youth Programs",
-    date: "May 18, 2025",
-    youtubeId: "GJkM0Pn7s5k",
-  },
-  {
-    id: "environmental-plan",
-    title: "Environmental Plan Announcement",
-    date: "May 02, 2025",
-    youtubeId: "2vJcMJ3Fomk",
-  },
-];
+const ensureHttps = (url) => {
+  if (typeof url !== "string" || url.length === 0) return null;
+  return url.startsWith("//") ? `https:${url}` : url;
+};
+
+const getYouTubeIdFromUrl = (url) => {
+  if (typeof url !== "string") return null;
+  const trimmed = url.trim();
+  if (!trimmed) return null;
+
+  const directIdMatch = trimmed.match(/^[A-Za-z0-9_-]{11}$/);
+  if (directIdMatch) return directIdMatch[0];
+
+  const urlObj = (() => {
+    try {
+      return new URL(trimmed.startsWith("http") ? trimmed : `https://${trimmed}`);
+    } catch {
+      return null;
+    }
+  })();
+
+  if (!urlObj) return null;
+
+  if (urlObj.hostname.includes("youtu.be")) {
+    return urlObj.pathname.replace("/", "") || null;
+  }
+
+  if (urlObj.hostname.includes("youtube.com")) {
+    const vParam = urlObj.searchParams.get("v");
+    if (vParam) return vParam;
+    const pathMatch = urlObj.pathname.match(/\/embed\/([A-Za-z0-9_-]{11})/);
+    if (pathMatch) return pathMatch[1];
+  }
+
+  return null;
+};
+
+const rawVideos = Array.isArray(videosData?.items) ? videosData.items : [];
+
+const normalizedVideos = rawVideos
+  .map((item, index) => {
+    const platform =
+      item.platform ??
+      (typeof item.videoUrl === "string" && item.videoUrl.includes("youtu")
+        ? "YouTube"
+        : "generic");
+
+    const videoId =
+      item.embedId ??
+      (platform === "YouTube" ? getYouTubeIdFromUrl(item.videoUrl) : null);
+
+    const watchUrl =
+      typeof item.videoUrl === "string" && item.videoUrl.length > 0
+        ? ensureHttps(item.videoUrl)
+        : platform === "YouTube" && videoId
+        ? `https://www.youtube.com/watch?v=${videoId}`
+        : null;
+
+    const embedUrl =
+      platform === "YouTube" && videoId
+        ? `https://www.youtube.com/embed/${videoId}`
+        : ensureHttps(item.embedUrl);
+
+    const publishedAtString =
+      typeof item.publishedAt === "string" ? item.publishedAt : null;
+    const publishedAt = publishedAtString ? Date.parse(publishedAtString) : null;
+
+    const formattedDate =
+      publishedAt && !Number.isNaN(publishedAt)
+        ? DATE_FORMATTER.format(publishedAt)
+        : "";
+
+    const thumbnailAsset = item.thumbnail?.fields?.file?.url;
+    const thumbnail =
+      ensureHttps(thumbnailAsset) ??
+      (platform === "YouTube" && videoId
+        ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+        : null);
+
+    return {
+      id: item.id ?? item.slug ?? videoId ?? `video-${index}`,
+      title: item.title ?? "Video",
+      platform,
+      embedUrl,
+      watchUrl,
+      thumbnail,
+      publishedAt,
+      formattedDate,
+      description: item.description ?? "",
+    };
+  })
+  .filter((video) => Boolean(video.watchUrl));
+
+const sortedVideos = normalizedVideos.slice().sort((a, b) => {
+  const aTime = typeof a.publishedAt === "number" ? a.publishedAt : 0;
+  const bTime = typeof b.publishedAt === "number" ? b.publishedAt : 0;
+  return bTime - aTime;
+});
+
+const showcaseVideos = sortedVideos.slice(0, 3);
+const archiveVideos = sortedVideos;
 
 const YouTubeShowcase = () => {
   const [selectedVideoId, setSelectedVideoId] = useState(null);
@@ -70,10 +114,7 @@ const YouTubeShowcase = () => {
 
   const selectedVideo = useMemo(() => {
     if (!selectedVideoId) return null;
-    return (
-      [...archiveVideos].find((video) => video.youtubeId === selectedVideoId) ??
-      null
-    );
+    return archiveVideos.find((video) => video.id === selectedVideoId) ?? null;
   }, [selectedVideoId]);
 
   const handleSelect = useCallback((videoId, sourceView = "showcase") => {
@@ -85,7 +126,9 @@ const YouTubeShowcase = () => {
   const handleClose = useCallback(() => {
     setSelectedVideoId(null);
     setShareFeedback("");
-    setView(playerReturnView);
+    setView((current) =>
+      current === "player" ? playerReturnView : "showcase",
+    );
   }, [playerReturnView]);
 
   const handleShowArchive = useCallback(() => {
@@ -125,9 +168,9 @@ const YouTubeShowcase = () => {
   }, [playerReturnView, selectedVideo, view]);
 
   const handleShare = useCallback(async () => {
-    if (!selectedVideo) return;
+    if (!selectedVideo?.watchUrl) return;
 
-    const shareUrl = `https://www.youtube.com/watch?v=${selectedVideo.youtubeId}`;
+    const shareUrl = selectedVideo.watchUrl;
 
     try {
       if (typeof navigator !== "undefined" && navigator.share) {
@@ -151,7 +194,7 @@ const YouTubeShowcase = () => {
   }, [selectedVideo]);
 
   return (
-    <motion.section
+    <Motion.section
       className="relative bg-gradient-to-r from-emerald-950 via-emerald-900 to-emerald-950"
       initial={false}
       animate={
@@ -165,7 +208,7 @@ const YouTubeShowcase = () => {
     >
       <AnimatePresence mode="wait">
         {view === "player" && selectedVideo && (
-          <motion.div
+          <Motion.div
             key="player"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -200,7 +243,7 @@ const YouTubeShowcase = () => {
               </button>
             </div>
 
-            <motion.div
+            <Motion.div
               className="w-full overflow-hidden rounded-2xl border border-emerald-500/40 bg-black shadow-[0_25px_80px_-35px_rgba(16,185,129,0.45)]"
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -208,18 +251,34 @@ const YouTubeShowcase = () => {
               transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
             >
               <div className="aspect-video w-full">
-                <iframe
-                  key={selectedVideo.youtubeId}
-                  className="h-full w-full"
-                  src={`https://www.youtube.com/embed/${selectedVideo.youtubeId}?autoplay=1`}
-                  title={selectedVideo.title}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                />
+                {selectedVideo.embedUrl ? (
+                  <iframe
+                    key={selectedVideo.id}
+                    className="h-full w-full"
+                    src={`${selectedVideo.embedUrl}?autoplay=1`}
+                    title={selectedVideo.title}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  />
+                ) : (
+                  <div className="flex h-full w-full flex-col items-center justify-center gap-4 bg-emerald-950 text-center text-emerald-100">
+                    <p className="max-w-md text-sm text-emerald-100/80">
+                      This source cannot be embedded. Please open it in a new tab.
+                    </p>
+                    <a
+                      href={selectedVideo.watchUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-5 py-2 text-sm font-semibold uppercase tracking-[0.3em] text-emerald-950 shadow-lg transition hover:bg-emerald-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-200"
+                    >
+                      Watch video
+                    </a>
+                  </div>
+                )}
               </div>
-            </motion.div>
+            </Motion.div>
 
-            <motion.div
+            <Motion.div
               className="flex flex-col items-center gap-2"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -235,7 +294,7 @@ const YouTubeShowcase = () => {
               </button>
               <AnimatePresence initial={false}>
                 {shareFeedback && (
-                  <motion.span
+                  <Motion.span
                     key="share-feedback"
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -244,15 +303,15 @@ const YouTubeShowcase = () => {
                     className="text-xs font-semibold uppercase tracking-[0.25em] text-emerald-300/90"
                   >
                     {shareFeedback}
-                  </motion.span>
+                  </Motion.span>
                 )}
               </AnimatePresence>
-            </motion.div>
-          </motion.div>
+            </Motion.div>
+          </Motion.div>
         )}
 
         {view === "archive" && (
-          <motion.div
+          <Motion.div
             key="archive"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -295,37 +354,41 @@ const YouTubeShowcase = () => {
             </header>
 
             <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {archiveVideos.map(({ id, title, date, youtubeId }) => (
-                <motion.button
+              {archiveVideos.map(({ id, title, formattedDate, thumbnail }) => (
+                <Motion.button
                   key={id}
                   type="button"
                   layout
-                  onClick={() => handleSelect(youtubeId, "archive")}
+                  onClick={() => handleSelect(id, "archive")}
                   className="group flex h-full flex-col overflow-hidden border border-emerald-500/30 bg-emerald-950/70 shadow-md transition hover:-translate-y-1 hover:shadow-lg"
                   whileHover={{ translateY: -4 }}
                 >
-                  <img
-                    src={`https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`}
-                    alt={`${title} thumbnail`}
-                    className="h-40 w-full object-cover object-top"
-                    loading="lazy"
-                  />
+                  {thumbnail ? (
+                    <img
+                      src={thumbnail}
+                      alt={`${title} thumbnail`}
+                      className="h-40 w-full object-cover object-top"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="flex h-40 w-full items-center justify-center bg-emerald-900/70 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-200">No thumbnail</div>
+                  )}
                   <div className="flex flex-1 flex-col gap-2 p-5 text-emerald-50">
                     <time className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-300/80">
-                      {date}
+                      {formattedDate || "No date"}
                     </time>
                     <h3 className="text-lg font-semibold leading-snug text-white group-hover:text-emerald-200">
                       {title}
                     </h3>
                   </div>
-                </motion.button>
+                </Motion.button>
               ))}
             </div>
-          </motion.div>
+          </Motion.div>
         )}
 
         {view === "showcase" && (
-          <motion.div
+          <Motion.div
             key="showcase"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -359,22 +422,26 @@ const YouTubeShowcase = () => {
             </header>
 
             <div className="mt-10 grid gap-6 md:grid-cols-3">
-              {videos.map(({ id, title, date, youtubeId }) => (
+              {showcaseVideos.map(({ id, title, formattedDate, thumbnail }) => (
                 <button
                   key={id}
                   type="button"
-                  onClick={() => handleSelect(youtubeId, "showcase")}
+                  onClick={() => handleSelect(id, "showcase")}
                   className="group flex h-full flex-col overflow-hidden rounded-none bg-emerald-950/70 ring-1 ring-emerald-600/30 transition duration-300 hover:-translate-y-1 hover:ring-emerald-300/50"
                 >
-                  <img
-                    src={`https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`}
-                    alt={`${title} thumbnail`}
-                    className="h-48 w-full object-cover object-top"
-                    loading="lazy"
-                  />
+                  {thumbnail ? (
+                    <img
+                      src={thumbnail}
+                      alt={`${title} thumbnail`}
+                      className="h-48 w-full object-cover object-top"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="flex h-48 w-full items-center justify-center bg-emerald-900/70 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-200">No thumbnail</div>
+                  )}
                   <div className="flex flex-1 flex-col gap-2 p-5 text-emerald-50">
                     <time className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-300/80">
-                      {date}
+                      {formattedDate || "No date"}
                     </time>
                     <h3 className="text-lg font-semibold leading-snug text-white">
                       {title}
@@ -383,10 +450,10 @@ const YouTubeShowcase = () => {
                 </button>
               ))}
             </div>
-          </motion.div>
+          </Motion.div>
         )}
       </AnimatePresence>
-    </motion.section>
+    </Motion.section>
   );
 };
 
