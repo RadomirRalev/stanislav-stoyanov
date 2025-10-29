@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/RadomirRalev/stanislav-stoyanov/compare/v1.1.1...v1.1.2) (2025-10-29)
+
+
+### Bug Fixes
+
+* change text in footer ([#8](https://github.com/RadomirRalev/stanislav-stoyanov/issues/8)) ([6b94a07](https://github.com/RadomirRalev/stanislav-stoyanov/commit/6b94a0784bdcdb902e4b2a61ae63718e3fbd1eba))
+
 ## [1.1.1](https://github.com/RadomirRalev/stanislav-stoyanov/compare/v1.1.0...v1.1.1) (2025-10-29)
 
 
