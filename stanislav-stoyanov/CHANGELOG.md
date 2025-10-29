@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/RadomirRalev/stanislav-stoyanov/compare/v1.1.0...v1.1.1) (2025-10-29)
+
+
+### Bug Fixes
+
+* update favicon ([#7](https://github.com/RadomirRalev/stanislav-stoyanov/issues/7)) ([e9f8867](https://github.com/RadomirRalev/stanislav-stoyanov/commit/e9f88678e690dc26aebd078c24b48d29532ea00f))
+
 # [1.1.0](https://github.com/RadomirRalev/stanislav-stoyanov/compare/v1.0.0...v1.1.0) (2025-09-18)
 
 
