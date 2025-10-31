@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import Header from "./header/Header";
 import GreenQuoteSection from "./header/GreenQuoteSection";
 import SocialBridge from "./socialnetworks/SocialBridge";
@@ -9,7 +10,24 @@ import UpcomingEvents from "./upcomingevents/UpcomingEvents";
 import Footer from "./footer/Footer";
 
 const LandingPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [showAllNews, setShowAllNews] = useState(false);
+  const activeArticleSlug = searchParams.get("article");
+
+  const handleActiveSlugChange = useCallback(
+    (slug) => {
+      const nextParams = new URLSearchParams(searchParams.toString());
+      if (slug) {
+        nextParams.set("article", slug);
+        setSearchParams(nextParams, { replace: false });
+      } else {
+        nextParams.delete("article");
+        setSearchParams(nextParams, { replace: true });
+      }
+    },
+    [searchParams, setSearchParams],
+  );
+
   return (
     <div className="min-h-screen w-full">
       <section
@@ -27,7 +45,11 @@ const LandingPage = () => {
       </section>
       <GreenQuoteSection />
       <SocialBridge />
-      <NewsSection showBackLink={false} />
+      <NewsSection
+        showBackLink={false}
+        initialSlug={activeArticleSlug}
+        onActiveSlugChange={handleActiveSlugChange}
+      />
       {showAllNews && <AllNewsSection onClose={() => setShowAllNews(false)} />}
       <YouTubeShowcase />
       <UpcomingEvents />
