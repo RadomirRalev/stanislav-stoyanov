@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+﻿import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { BLOCKS, INLINES, MARKS } from "@contentful/rich-text-types";
@@ -185,13 +185,19 @@ const NewsSection = ({
 } = {}) => {
   const sectionRef = useRef(null);
   const [activeSlug, setActiveSlug] = useState(initialSlug);
+  const [showAllArticles, setShowAllArticles] = useState(false);
 
   useEffect(() => {
     setActiveSlug(initialSlug ?? null);
   }, [initialSlug]);
 
-  const leadArticle = articles[0] ?? null;
-  const secondaryArticles = articles.slice(1, 5);
+  const visibleArticles = useMemo(
+    () => (showAllArticles ? articles : articles.slice(0, 5)),
+    [articles, showAllArticles],
+  );
+
+  const leadArticle = visibleArticles[0] ?? null;
+  const secondaryArticles = visibleArticles.slice(1);
 
   const activeArticle = useMemo(() => {
     if (!activeSlug) return null;
@@ -233,6 +239,10 @@ const NewsSection = ({
     onActiveSlugChange(null);
   };
 
+  const toggleShowAllArticles = () => {
+    setShowAllArticles((previous) => !previous);
+  };
+
   useEffect(() => {
     if (!activeSlug || !sectionRef.current) return;
     if (typeof sectionRef.current.scrollIntoView !== "function") return;
@@ -247,7 +257,7 @@ const NewsSection = ({
           className="bg-gradient-to-b from-white via-emerald-50 to-emerald-100 py-16"
         >
           <div className="mx-auto max-w-6xl px-6 md:px-12">
-            <p className="text-sm text-emerald-900/70">??? ??? ???? ??????????? ??????.</p>
+            <p className="text-sm text-emerald-900/70">Ð’ÑÐµ Ð¾Ñ‰Ðµ Ð½ÑÐ¼Ð° Ð½Ð¾Ð²Ð¸Ð½Ð¸.</p>
           </div>
         </section>
         {showBackLink && <Footer />}
@@ -272,22 +282,22 @@ const NewsSection = ({
                 <span aria-hidden="true" className="text-xl leading-none text-emerald-500">
                   &larr;
                 </span>
-                <span>Назад към началото</span>
+                <span>ÐÐ°Ð·Ð°Ð´ ÐºÑŠÐ¼ Ð½Ð°Ñ‡Ð°Ð»Ð¾Ñ‚Ð¾</span>
               </Link>
             </div>
           )}
 
-          <div className="relative">
+          <div className="relative pb-12">
             {activeArticle ? (
               <article
-                className="relative mx-auto max-w-3xl text-emerald-900"
+                className="relative mx-auto max-w-3xl text-black"
                 style={{ fontFamily: "'PT Serif', serif" }}
               >
                 <div className="flex w-full justify-end pb-6">
                   <button
                     type="button"
                     onClick={handleCloseArticle}
-                    className="bg-emerald-600 px-4 py-3 text-white shadow-lg transition hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
+                    className="cursor-pointer bg-emerald-600 px-4 py-3 text-white shadow-lg transition hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
                     aria-label="Close article"
                   >
                     <svg
@@ -309,7 +319,7 @@ const NewsSection = ({
 
                 <header className="space-y-4">
                   <time
-                    className="text-xs font-semibold uppercase tracking-[0.4em] text-emerald-600/80"
+                    className="text-xs font-semibold uppercase tracking-[0.4em] text-black"
                     style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
                   >
                     {activeArticle.formattedDate || activeArticle.publishedAtString || ""}
@@ -321,7 +331,7 @@ const NewsSection = ({
                     {activeArticle.title}
                   </h2>
                   {activeArticle.excerpt && (
-                    <p className="text-base text-emerald-800 md:text-lg">
+                    <p className="text-base text-black md:text-lg">
                       {activeArticle.excerpt}
                     </p>
                   )}
@@ -359,7 +369,7 @@ const NewsSection = ({
                   )}
                 </header>
 
-                <section className="mt-8 space-y-6 text-lg leading-8 text-emerald-900 md:text-[1.25rem] md:leading-[2.2rem]">
+                <section className="mt-8 space-y-6 text-lg leading-8 text-black md:text-[1.25rem] md:leading-[2.2rem]">
                   {activeArticle.rawBody
                     ? documentToReactComponents(activeArticle.rawBody, richTextOptions)
                     : fallbackParagraphs.map((paragraph, index) => (
@@ -368,6 +378,13 @@ const NewsSection = ({
                         </p>
                       ))}
                 </section>
+                <div className="group mt-10 flex items-center justify-center text-emerald-900">
+                  <span className="flex items-center gap-3 text-base uppercase tracking-[0.35em] transition group-hover:text-emerald-500">
+                    <span className="transition-transform duration-300 group-hover:-translate-x-1">Â·</span>
+                    <span className="transition-colors duration-300">Â·</span>
+                    <span className="transition-transform duration-300 group-hover:translate-x-1">Â·</span>
+                  </span>
+                </div>
               </article>
             ) : (
               <div className="space-y-10 text-emerald-900">
@@ -375,7 +392,7 @@ const NewsSection = ({
                   <button
                     type="button"
                     onClick={() => handleOpenArticle(leadArticle.slug)}
-                    className="group relative block w-full overflow-hidden bg-emerald-950 shadow-2xl shadow-emerald-900/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400"
+                    className="group relative block w-full cursor-pointer overflow-hidden bg-emerald-950 shadow-2xl shadow-emerald-900/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400"
                   >
                     {leadArticle.heroImageUrl && (
                       <img
@@ -404,7 +421,7 @@ const NewsSection = ({
                         key={article.slug}
                         type="button"
                         onClick={() => handleOpenArticle(article.slug)}
-                        className="group relative block overflow-hidden bg-white shadow-xl shadow-emerald-200/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400"
+                        className="group relative block cursor-pointer overflow-hidden bg-white shadow-xl shadow-emerald-200/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400"
                       >
                         {article.heroImageUrl ? (
                           <img
@@ -428,6 +445,34 @@ const NewsSection = ({
                 )}
               </div>
             )}
+            {!activeArticle && articles.length > 5 && (
+              <div className="pointer-events-none absolute inset-x-0 top-full flex -translate-y-4 justify-center">
+                <div className="pointer-events-auto">
+                  <div className="h-10 bg-gradient-to-b from-transparent to-emerald-100/90" />
+                  <button
+                    type="button"
+                    onClick={toggleShowAllArticles}
+                    className="group mx-auto flex cursor-pointer items-center gap-4 bg-emerald-100 px-6 py-3 text-lg font-semibold uppercase tracking-[0.4em] text-emerald-800 transition hover:text-emerald-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
+                    aria-expanded={showAllArticles}
+                  >
+                    <span>{showAllArticles ? "Затвори" : "Още новини"}</span>
+                    <svg
+                      className={`h-5 w-5 transition-transform duration-500 ease-out ${showAllArticles ? "rotate-180" : "group-hover:-translate-y-0.5"}`}
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden="true"
+                      focusable="false"
+                    >
+                      <path
+                        d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.17l3.71-3.94a.75.75 0 0 1 1.08 1.04l-4.24 4.5a.75.75 0 0 1-1.08 0l-4.26-4.5a.75.75 0 0 1 .02-1.06Z"
+                        className="fill-current transition-colors duration-300 group-hover:text-emerald-900"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -437,3 +482,4 @@ const NewsSection = ({
 };
 
 export default NewsSection;
+
