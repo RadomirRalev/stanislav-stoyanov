@@ -257,7 +257,7 @@ const NewsSection = ({
           className="bg-gradient-to-b from-white via-emerald-50 to-emerald-100 py-16"
         >
           <div className="mx-auto max-w-6xl px-6 md:px-12">
-            <p className="text-sm text-emerald-900/70">Ð’ÑÐµ Ð¾Ñ‰Ðµ Ð½ÑÐ¼Ð° Ð½Ð¾Ð²Ð¸Ð½Ð¸.</p>
+            <p className="text-sm text-emerald-900/70">.</p>
           </div>
         </section>
         {showBackLink && <Footer />}
@@ -282,7 +282,7 @@ const NewsSection = ({
                 <span aria-hidden="true" className="text-xl leading-none text-emerald-500">
                   &larr;
                 </span>
-                <span>ÐÐ°Ð·Ð°Ð´ ÐºÑŠÐ¼ Ð½Ð°Ñ‡Ð°Ð»Ð¾Ñ‚Ð¾</span>
+                <span>.</span>
               </Link>
             </div>
           )}
@@ -380,9 +380,9 @@ const NewsSection = ({
                 </section>
                 <div className="group mt-10 flex items-center justify-center text-emerald-900">
                   <span className="flex items-center gap-3 text-base uppercase tracking-[0.35em] transition group-hover:text-emerald-500">
-                    <span className="transition-transform duration-300 group-hover:-translate-x-1">Â·</span>
-                    <span className="transition-colors duration-300">Â·</span>
-                    <span className="transition-transform duration-300 group-hover:translate-x-1">Â·</span>
+                    <span className="transition-transform duration-300 group-hover:-translate-x-1">·</span>
+                    <span className="transition-colors duration-300">·</span>
+                    <span className="transition-transform duration-300 group-hover:translate-x-1">·</span>
                   </span>
                 </div>
               </article>
