@@ -186,13 +186,14 @@ const NewsSection = ({
   const sectionRef = useRef(null);
   const [activeSlug, setActiveSlug] = useState(initialSlug);
   const [showAllArticles, setShowAllArticles] = useState(false);
+  const previousShowAllRef = useRef(showAllArticles);
 
   useEffect(() => {
     setActiveSlug(initialSlug ?? null);
   }, [initialSlug]);
 
   const visibleArticles = useMemo(
-    () => (showAllArticles ? articles : articles.slice(0, 5)),
+    () => (showAllArticles ? articles : articles.slice(0, 3)),
     [articles, showAllArticles],
   );
 
@@ -249,6 +250,26 @@ const NewsSection = ({
     sectionRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [activeSlug]);
 
+  useEffect(() => {
+    if (activeArticle) {
+      previousShowAllRef.current = showAllArticles;
+      return;
+    }
+    if (previousShowAllRef.current === showAllArticles) return;
+    previousShowAllRef.current = showAllArticles;
+    const element = sectionRef.current;
+    if (!element || typeof element.scrollIntoView !== "function") return;
+
+    if (typeof window === "undefined") {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+
+    window.requestAnimationFrame(() => {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }, [activeArticle, showAllArticles]);
+
   if (!articles.length) {
     return (
       <>
@@ -288,6 +309,31 @@ const NewsSection = ({
           )}
 
           <div className="relative pb-12">
+            {!activeArticle && articles.length > 5 && !showAllArticles && (
+              <div className="-mt-8 mb-2 flex justify-start">
+                <button
+                  type="button"
+                  onClick={toggleShowAllArticles}
+                  className="group inline-flex cursor-pointer items-center gap-4 bg-transparent px-6 py-3 text-base font-semibold uppercase tracking-[0.4em] text-emerald-900 transition hover:text-emerald-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
+                  aria-expanded={showAllArticles}
+                >
+                  <span>Още новини</span>
+                  <svg
+                    className="h-5 w-5 transition-transform duration-500 ease-out group-hover:-translate-y-0.5"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path
+                      d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.17l3.71-3.94a.75.75 0 0 1 1.08 1.04l-4.24 4.5a.75.75 0 0 1-1.08 0l-4.26-4.5a.75.75 0 0 1 .02-1.06Z"
+                      className="fill-current transition-colors duration-300 group-hover:text-emerald-900"
+                    />
+                  </svg>
+                </button>
+              </div>
+            )}
             {activeArticle ? (
               <article
                 className="relative mx-auto max-w-3xl text-black"
@@ -445,19 +491,19 @@ const NewsSection = ({
                 )}
               </div>
             )}
-            {!activeArticle && articles.length > 5 && (
+            {!activeArticle && articles.length > 5 && showAllArticles && (
               <div className="pointer-events-none absolute inset-x-0 top-full flex -translate-y-4 justify-center">
                 <div className="pointer-events-auto">
                   <div className="h-10 bg-gradient-to-b from-transparent to-emerald-100/90" />
                   <button
                     type="button"
                     onClick={toggleShowAllArticles}
-                    className="group mx-auto flex cursor-pointer items-center gap-4 bg-emerald-100 px-6 py-3 text-lg font-semibold uppercase tracking-[0.4em] text-emerald-800 transition hover:text-emerald-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
+                    className="group mx-auto flex cursor-pointer items-center gap-4 bg-transparent px-6 py-3 text-lg font-semibold uppercase tracking-[0.4em] text-emerald-900 transition hover:text-emerald-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
                     aria-expanded={showAllArticles}
                   >
-                    <span>{showAllArticles ? "Затвори" : "Още новини"}</span>
+                    <span>Затвори</span>
                     <svg
-                      className={`h-5 w-5 transition-transform duration-500 ease-out ${showAllArticles ? "rotate-180" : "group-hover:-translate-y-0.5"}`}
+                      className="h-5 w-5 transition-transform duration-500 ease-out rotate-180"
                       viewBox="0 0 20 20"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
