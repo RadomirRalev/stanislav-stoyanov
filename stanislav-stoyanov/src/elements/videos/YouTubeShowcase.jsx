@@ -1,8 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion as Motion } from "motion/react";
 import videosData from "../../generated/videos.json";
+import { InfoText } from "../common/InfoText";
+import { ShowMoreButton } from "../common/Buttons";
 
-const DATE_FORMATTER = new Intl.DateTimeFormat("bg-BG", { dateStyle: "medium" });
+const DATE_FORMATTER = new Intl.DateTimeFormat("bg-BG", {
+  dateStyle: "medium",
+});
 
 const ensureHttps = (url) => {
   if (typeof url !== "string" || url.length === 0) return null;
@@ -19,7 +23,9 @@ const getYouTubeIdFromUrl = (url) => {
 
   const urlObj = (() => {
     try {
-      return new URL(trimmed.startsWith("http") ? trimmed : `https://${trimmed}`);
+      return new URL(
+        trimmed.startsWith("http") ? trimmed : `https://${trimmed}`
+      );
     } catch {
       return null;
     }
@@ -69,7 +75,9 @@ const normalizedVideos = rawVideos
 
     const publishedAtString =
       typeof item.publishedAt === "string" ? item.publishedAt : null;
-    const publishedAt = publishedAtString ? Date.parse(publishedAtString) : null;
+    const publishedAt = publishedAtString
+      ? Date.parse(publishedAtString)
+      : null;
 
     const formattedDate =
       publishedAt && !Number.isNaN(publishedAt)
@@ -127,7 +135,7 @@ const YouTubeShowcase = () => {
     setSelectedVideoId(null);
     setShareFeedback("");
     setView((current) =>
-      current === "player" ? playerReturnView : "showcase",
+      current === "player" ? playerReturnView : "showcase"
     );
   }, [playerReturnView]);
 
@@ -263,7 +271,8 @@ const YouTubeShowcase = () => {
                 ) : (
                   <div className="flex h-full w-full flex-col items-center justify-center gap-4 bg-emerald-950 text-center text-emerald-100">
                     <p className="max-w-md text-sm text-emerald-100/80">
-                      This source cannot be embedded. Please open it in a new tab.
+                      This source cannot be embedded. Please open it in a new
+                      tab.
                     </p>
                     <a
                       href={selectedVideo.watchUrl}
@@ -330,26 +339,26 @@ const YouTubeShowcase = () => {
               </div>
               <div className="flex flex-wrap items-center gap-3">
                 <button
-                type="button"
-                onClick={handleClose}
-                className="inline-flex h-11 w-11 items-center justify-center border border-emerald-300/40 bg-emerald-900/60 text-emerald-50 shadow-lg shadow-emerald-950/30 transition-transform duration-200 hover:-translate-y-0.5 hover:bg-emerald-800 focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-emerald-950 active:scale-95"
-                aria-label="Close video"
-              >
-                <svg
-                  className="h-4 w-4"
-                  viewBox="0 0 14 14"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                  focusable="false"
+                  type="button"
+                  onClick={handleClose}
+                  className="inline-flex h-11 w-11 items-center justify-center border border-emerald-300/40 bg-emerald-900/60 text-emerald-50 shadow-lg shadow-emerald-950/30 transition-transform duration-200 hover:-translate-y-0.5 hover:bg-emerald-800 focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-emerald-950 active:scale-95"
+                  aria-label="Close video"
                 >
-                  <path
-                    d="M3.22 3.22a.75.75 0 0 1 1.06 0L7 5.94l2.72-2.72a.75.75 0 1 1 1.06 1.06L8.06 7l2.72 2.72a.75.75 0 0 1-1.06 1.06L7 8.06l-2.72 2.72a.75.75 0 0 1-1.06-1.06L5.94 7 3.22 4.28a.75.75 0 0 1 0-1.06Z"
-                    fill="currentColor"
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
+                  <svg
+                    className="h-4 w-4"
+                    viewBox="0 0 14 14"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path
+                      d="M3.22 3.22a.75.75 0 0 1 1.06 0L7 5.94l2.72-2.72a.75.75 0 1 1 1.06 1.06L8.06 7l2.72 2.72a.75.75 0 0 1-1.06 1.06L7 8.06l-2.72 2.72a.75.75 0 0 1-1.06-1.06L5.94 7 3.22 4.28a.75.75 0 0 1 0-1.06Z"
+                      fill="currentColor"
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
               </div>
             </header>
 
@@ -371,7 +380,9 @@ const YouTubeShowcase = () => {
                       loading="lazy"
                     />
                   ) : (
-                    <div className="flex h-40 w-full items-center justify-center bg-emerald-900/70 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-200">No thumbnail</div>
+                    <div className="flex h-40 w-full items-center justify-center bg-emerald-900/70 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-200">
+                      No thumbnail
+                    </div>
                   )}
                   <div className="flex flex-1 flex-col gap-2 p-5 text-emerald-50">
                     <time className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-300/80">
@@ -396,29 +407,16 @@ const YouTubeShowcase = () => {
             transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
             className="mx-auto max-w-7xl px-6 md:px-12"
           >
-            <header className="text-emerald-100">
-              <p className="text-xs font-semibold uppercase tracking-[0.4em] text-emerald-300/70">
-                Последни видеа
-              </p>
-              <div className="mt-3 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-                <div>
-                  <h2 className="text-3xl font-bold uppercase tracking-wide md:text-4xl">
-                    Моето мнение
-                  </h2>
-                  <p className="mt-2 max-w-sm text-sm text-emerald-100/70">
-                    Сподели с приятели и съмишленици
-                  </p>
-                </div>
-                <div className="flex gap-3">
-                  <button
-                    type="button"
-                    onClick={handleShowArchive}
-                    className="inline-flex items-center bg-emerald-500 px-5 py-2 text-sm font-semibold uppercase tracking-[0.3em] text-emerald-950 shadow-lg transition hover:bg-emerald-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-200"
-                  >
-                    Всички видеа
-                  </button>
-                </div>
-              </div>
+            <header className="flex flex-col gap-4 text-emerald-100 md:flex-row md:items-end md:justify-between mb-6">
+              <InfoText
+                label={"Последни видеа"}
+                headline={"Моето мнение"}
+                subtext={"Сподели с приятели и съмишленици"}
+              />
+              <ShowMoreButton
+                onClickAction={handleShowArchive}
+                label={"Всички видеа"}
+              />
             </header>
 
             <div className="mt-10 grid gap-6 md:grid-cols-3">
@@ -437,7 +435,9 @@ const YouTubeShowcase = () => {
                       loading="lazy"
                     />
                   ) : (
-                    <div className="flex h-48 w-full items-center justify-center bg-emerald-900/70 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-200">No thumbnail</div>
+                    <div className="flex h-48 w-full items-center justify-center bg-emerald-900/70 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-200">
+                      No thumbnail
+                    </div>
                   )}
                   <div className="flex flex-1 flex-col gap-2 p-5 text-emerald-50">
                     <time className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-300/80">

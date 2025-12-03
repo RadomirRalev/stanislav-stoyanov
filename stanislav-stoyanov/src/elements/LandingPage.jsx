@@ -4,7 +4,6 @@ import Header from "./header/Header";
 import GreenQuoteSection from "./header/GreenQuoteSection";
 import SocialBridge from "./socialnetworks/SocialBridge";
 import NewsSection from "./articles/NewsSection";
-import AllNewsSection from "./articles/AllNewsSection";
 import YouTubeShowcase from "./videos/YouTubeShowcase";
 import UpcomingEvents from "./upcomingevents/UpcomingEvents";
 import Footer from "./footer/Footer";

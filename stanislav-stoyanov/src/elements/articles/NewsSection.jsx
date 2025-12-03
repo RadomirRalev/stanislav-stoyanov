@@ -4,6 +4,8 @@ import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
 import { BLOCKS, INLINES, MARKS } from "@contentful/rich-text-types";
 import Footer from "../footer/Footer";
 import newsData from "../../generated/news.json";
+import { CloseButton, ShowMoreButton } from "../common/Buttons";
+import { InfoText } from "../common/InfoText";
 
 const DATE_FORMATTER = new Intl.DateTimeFormat("bg-BG", {
   day: "2-digit",
@@ -20,7 +22,9 @@ const resolveImageSrc = (src) => {
 const normalizeBody = (value) => {
   if (!value) return [];
   if (Array.isArray(value)) {
-    return value.filter((paragraph) => typeof paragraph === "string" && paragraph.trim());
+    return value.filter(
+      (paragraph) => typeof paragraph === "string" && paragraph.trim()
+    );
   }
   if (typeof value === "string" && value.trim()) return [value];
   return [];
@@ -32,11 +36,14 @@ const extractLeadBlurb = (article) => {
     typeof article.excerpt === "string" && article.excerpt.trim()
       ? article.excerpt
       : Array.isArray(article.body)
-        ? article.body.join(" ")
-        : "";
+      ? article.body.join(" ")
+      : "";
   if (!source) return "";
 
-  const [sentence] = source.split(".").map((part) => part.trim()).filter(Boolean);
+  const [sentence] = source
+    .split(".")
+    .map((part) => part.trim())
+    .filter(Boolean);
   if (!sentence) return "";
   return sentence.endsWith(".") ? sentence : `${sentence}.`;
 };
@@ -46,13 +53,18 @@ const rawArticles = Array.isArray(newsData?.items) ? newsData.items : [];
 const articles = rawArticles
   .map((article, index) => {
     const slug = article.slug ?? `article-${index}`;
-    const publishedAtString = typeof article.publishedAt === "string" ? article.publishedAt : null;
-    const publishedAt = publishedAtString ? Date.parse(publishedAtString) : null;
+    const publishedAtString =
+      typeof article.publishedAt === "string" ? article.publishedAt : null;
+    const publishedAt = publishedAtString
+      ? Date.parse(publishedAtString)
+      : null;
     const formattedDate =
-      publishedAt && !Number.isNaN(publishedAt) ? DATE_FORMATTER.format(publishedAt) : "";
+      publishedAt && !Number.isNaN(publishedAt)
+        ? DATE_FORMATTER.format(publishedAt)
+        : "";
 
     const heroImageUrl = resolveImageSrc(
-      article.heroImage?.url ?? article.heroImageUrl ?? "",
+      article.heroImage?.url ?? article.heroImageUrl ?? ""
     );
 
     return {
@@ -61,7 +73,8 @@ const articles = rawArticles
       title: article.title ?? "?????",
       subtitle: article.subtitle ?? "",
       heroImageUrl,
-      heroImageAlt: article.heroImage?.alt ?? article.heroImageAlt ?? article.title ?? "",
+      heroImageAlt:
+        article.heroImage?.alt ?? article.heroImageAlt ?? article.title ?? "",
       excerpt: article.excerpt ?? "",
       blurb: extractLeadBlurb(article),
       rawBody: article.rawBody ?? null,
@@ -105,7 +118,9 @@ const richTextOptions = {
         href={node.data.uri}
         className="text-emerald-700 underline underline-offset-4 transition hover:text-emerald-900"
         target={node.data.uri?.startsWith("http") ? "_blank" : undefined}
-        rel={node.data.uri?.startsWith("http") ? "noopener noreferrer" : undefined}
+        rel={
+          node.data.uri?.startsWith("http") ? "noopener noreferrer" : undefined
+        }
       >
         {children}
       </a>
@@ -142,7 +157,12 @@ const SOCIAL_PLATFORMS = [
     buildHref: (url) =>
       `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
     icon: (
-      <svg viewBox="0 0 16 16" className="h-4 w-4" aria-hidden="true" focusable="false">
+      <svg
+        viewBox="0 0 16 16"
+        className="h-4 w-4"
+        aria-hidden="true"
+        focusable="false"
+      >
         <path
           d="M9.6 6.002V4.884c0-.54.13-.812.94-.812h1.094V2h-1.75C7.95 2 7.2 2.818 7.2 4.422v1.58H5.6V8h1.6v6h2V8h1.586L11.2 6.002H9.6Z"
           fill="currentColor"
@@ -155,7 +175,12 @@ const SOCIAL_PLATFORMS = [
     buildHref: (url) =>
       `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`,
     icon: (
-      <svg viewBox="0 0 16 16" className="h-4 w-4" aria-hidden="true" focusable="false">
+      <svg
+        viewBox="0 0 16 16"
+        className="h-4 w-4"
+        aria-hidden="true"
+        focusable="false"
+      >
         <path
           d="M13.8 4.312a4.63 4.63 0 0 1-1.323.363 2.31 2.31 0 0 0 1.015-1.275 4.64 4.64 0 0 1-1.466.56 2.3 2.3 0 0 0-3.918 1.57c0 .18.02.356.06.523-1.91-.095-3.603-1.01-4.737-2.402a2.283 2.283 0 0 0-.312 1.156 2.3 2.3 0 0 0 1.023 1.914 2.29 2.29 0 0 1-1.042-.288v.03a2.3 2.3 0 0 0 1.846 2.252 2.32 2.32 0 0 1-1.04.04 2.302 2.302 0 0 0 2.148 1.596 4.616 4.616 0 0 1-2.853.983c-.185 0-.366-.01-.546-.03A6.53 6.53 0 0 0 6.196 13c4.196 0 6.492-3.477 6.492-6.49 0-.099-.002-.196-.007-.293a4.64 4.64 0 0 0 1.12-1.205Z"
           fill="currentColor"
@@ -166,9 +191,16 @@ const SOCIAL_PLATFORMS = [
   {
     name: "LinkedIn",
     buildHref: (url) =>
-      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+        url
+      )}`,
     icon: (
-      <svg viewBox="0 0 16 16" className="h-4 w-4" aria-hidden="true" focusable="false">
+      <svg
+        viewBox="0 0 16 16"
+        className="h-4 w-4"
+        aria-hidden="true"
+        focusable="false"
+      >
         <path
           d="M4.178 13H2V5.667h2.178V13Zm-.26-8.433a1.298 1.298 0 0 1-1.32-1.28c0-.7.573-1.287 1.32-1.287.747 0 1.313.588 1.327 1.287a1.3 1.3 0 0 1-1.327 1.28Zm10.082 8.433h-2.177V9.446c0-.848-.303-1.428-1.062-1.428-.58 0-.925.39-1.077.766-.056.135-.07.324-.07.513V13H7.438s.029-5.788 0-6.333h2.176v.896c.289-.445.806-1.081 1.958-1.081 1.429 0 2.428.936 2.428 2.946V13Z"
           fill="currentColor"
@@ -186,14 +218,15 @@ const NewsSection = ({
   const sectionRef = useRef(null);
   const [activeSlug, setActiveSlug] = useState(initialSlug);
   const [showAllArticles, setShowAllArticles] = useState(false);
+  const previousShowAllRef = useRef(showAllArticles);
 
   useEffect(() => {
     setActiveSlug(initialSlug ?? null);
   }, [initialSlug]);
 
   const visibleArticles = useMemo(
-    () => (showAllArticles ? articles : articles.slice(0, 5)),
-    [articles, showAllArticles],
+    () => (showAllArticles ? articles : articles.slice(0, 3)),
+    [articles, showAllArticles]
   );
 
   const leadArticle = visibleArticles[0] ?? null;
@@ -215,7 +248,7 @@ const NewsSection = ({
 
   const shareUrl = useMemo(
     () => (activeArticle ? buildArticleShareUrl(activeArticle.slug) : ""),
-    [activeArticle],
+    [activeArticle]
   );
 
   const shareLinks = useMemo(() => {
@@ -239,6 +272,16 @@ const NewsSection = ({
     onActiveSlugChange(null);
   };
 
+  const handleOpenAllNews = () => {
+    if (activeSlug !== null) {
+      setActiveSlug(null);
+      onActiveSlugChange(null);
+    }
+    if (!showAllArticles) {
+      setShowAllArticles(true);
+    }
+  };
+
   const toggleShowAllArticles = () => {
     setShowAllArticles((previous) => !previous);
   };
@@ -248,6 +291,26 @@ const NewsSection = ({
     if (typeof sectionRef.current.scrollIntoView !== "function") return;
     sectionRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [activeSlug]);
+
+  useEffect(() => {
+    if (activeArticle) {
+      previousShowAllRef.current = showAllArticles;
+      return;
+    }
+    if (previousShowAllRef.current === showAllArticles) return;
+    previousShowAllRef.current = showAllArticles;
+    const element = sectionRef.current;
+    if (!element || typeof element.scrollIntoView !== "function") return;
+
+    if (typeof window === "undefined") {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+
+    window.requestAnimationFrame(() => {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }, [activeArticle, showAllArticles]);
 
   if (!articles.length) {
     return (
@@ -279,7 +342,10 @@ const NewsSection = ({
                 to="/"
                 className="inline-flex items-center gap-3 border border-emerald-300 bg-white px-6 py-3 text-sm font-semibold uppercase tracking-[0.35em] text-emerald-900 shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-500 hover:text-emerald-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
               >
-                <span aria-hidden="true" className="text-xl leading-none text-emerald-500">
+                <span
+                  aria-hidden="true"
+                  className="text-3xl leading-none text-emerald-500"
+                >
                   &larr;
                 </span>
                 <span>.</span>
@@ -288,45 +354,40 @@ const NewsSection = ({
           )}
 
           <div className="relative pb-12">
+            {!activeArticle && articles.length > 5 && !showAllArticles && (
+              <header className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between mb-6">
+                <InfoText label="Последни" headline="Акценти" />
+                <ShowMoreButton
+                  onClickAction={handleOpenAllNews}
+                  label={"Виж всички"}
+                />
+              </header>
+            )}
             {activeArticle ? (
               <article
                 className="relative mx-auto max-w-3xl text-black"
                 style={{ fontFamily: "'PT Serif', serif" }}
               >
-                <div className="flex w-full justify-end pb-6">
-                  <button
-                    type="button"
-                    onClick={handleCloseArticle}
-                    className="cursor-pointer bg-emerald-600 px-4 py-3 text-white shadow-lg transition hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
-                    aria-label="Close article"
-                  >
-                    <svg
-                      className="h-5 w-5"
-                      viewBox="0 0 14 14"
-                      xmlns="http://www.w3.org/2000/svg"
-                      aria-hidden="true"
-                      focusable="false"
-                    >
-                      <path
-                        d="M3.22 3.22a.75.75 0 0 1 1.06 0L7 5.94l2.72-2.72a.75.75 0 1 1 1.06 1.06L8.06 7l2.72 2.72a.75.75 0 0 1-1.06 1.06L7 8.06l-2.72 2.72a.75.75 0 0 1-1.06-1.06L5.94 7 3.22 4.28a.75.75 0 0 1 0-1.06Z"
-                        fill="currentColor"
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </button>
-                </div>
+                <CloseButton onClickAction={handleCloseArticle} />
 
                 <header className="space-y-4">
                   <time
                     className="text-xs font-semibold uppercase tracking-[0.4em] text-black"
-                    style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
+                    style={{
+                      fontFamily:
+                        "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                    }}
                   >
-                    {activeArticle.formattedDate || activeArticle.publishedAtString || ""}
+                    {activeArticle.formattedDate ||
+                      activeArticle.publishedAtString ||
+                      ""}
                   </time>
                   <h2
                     className="text-3xl font-bold uppercase tracking-wide md:text-4xl"
-                    style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
+                    style={{
+                      fontFamily:
+                        "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                    }}
                   >
                     {activeArticle.title}
                   </h2>
@@ -371,7 +432,10 @@ const NewsSection = ({
 
                 <section className="mt-8 space-y-6 text-lg leading-8 text-black md:text-[1.25rem] md:leading-[2.2rem]">
                   {activeArticle.rawBody
-                    ? documentToReactComponents(activeArticle.rawBody, richTextOptions)
+                    ? documentToReactComponents(
+                        activeArticle.rawBody,
+                        richTextOptions
+                      )
                     : fallbackParagraphs.map((paragraph, index) => (
                         <p key={index} className="text-pretty">
                           {paragraph}
@@ -380,14 +444,21 @@ const NewsSection = ({
                 </section>
                 <div className="group mt-10 flex items-center justify-center text-emerald-900">
                   <span className="flex items-center gap-3 text-base uppercase tracking-[0.35em] transition group-hover:text-emerald-500">
-                    <span className="transition-transform duration-300 group-hover:-translate-x-1">·</span>
+                    <span className="transition-transform duration-300 group-hover:-translate-x-1">
+                      ·
+                    </span>
                     <span className="transition-colors duration-300">·</span>
-                    <span className="transition-transform duration-300 group-hover:translate-x-1">·</span>
+                    <span className="transition-transform duration-300 group-hover:translate-x-1">
+                      ·
+                    </span>
                   </span>
                 </div>
               </article>
             ) : (
               <div className="space-y-10 text-emerald-900">
+                {!activeArticle && articles.length > 5 && showAllArticles && (
+                  <CloseButton onClickAction={toggleShowAllArticles} />
+                )}
                 {leadArticle && (
                   <button
                     type="button"
@@ -404,11 +475,17 @@ const NewsSection = ({
                     )}
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/80 to-transparent p-8 text-left text-white">
                       <time className="text-xs font-semibold uppercase tracking-[0.4em] text-green-200/80">
-                        {leadArticle.formattedDate || leadArticle.publishedAtString || ""}
+                        {leadArticle.formattedDate ||
+                          leadArticle.publishedAtString ||
+                          ""}
                       </time>
-                      <h3 className="mt-3 text-3xl font-semibold">{leadArticle.title}</h3>
+                      <h3 className="mt-3 text-3xl font-semibold">
+                        {leadArticle.title}
+                      </h3>
                       {leadArticle.blurb && (
-                        <p className="mt-4 text-base text-green-100/90">{leadArticle.blurb}</p>
+                        <p className="mt-4 text-base text-green-100/90">
+                          {leadArticle.blurb}
+                        </p>
                       )}
                     </div>
                   </button>
@@ -431,46 +508,25 @@ const NewsSection = ({
                             loading="lazy"
                           />
                         ) : (
-                          <div className="h-72 w-full bg-emerald-100" aria-hidden="true" />
+                          <div
+                            className="h-72 w-full bg-emerald-100"
+                            aria-hidden="true"
+                          />
                         )}
                         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent p-6 text-left text-white">
                           <time className="text-xs font-semibold uppercase tracking-[0.4em] text-green-200/80">
-                            {article.formattedDate || article.publishedAtString || ""}
+                            {article.formattedDate ||
+                              article.publishedAtString ||
+                              ""}
                           </time>
-                          <h3 className="mt-3 text-2xl font-semibold">{article.title}</h3>
+                          <h3 className="mt-3 text-2xl font-semibold">
+                            {article.title}
+                          </h3>
                         </div>
                       </button>
                     ))}
                   </div>
                 )}
-              </div>
-            )}
-            {!activeArticle && articles.length > 5 && (
-              <div className="pointer-events-none absolute inset-x-0 top-full flex -translate-y-4 justify-center">
-                <div className="pointer-events-auto">
-                  <div className="h-10 bg-gradient-to-b from-transparent to-emerald-100/90" />
-                  <button
-                    type="button"
-                    onClick={toggleShowAllArticles}
-                    className="group mx-auto flex cursor-pointer items-center gap-4 bg-emerald-100 px-6 py-3 text-lg font-semibold uppercase tracking-[0.4em] text-emerald-800 transition hover:text-emerald-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
-                    aria-expanded={showAllArticles}
-                  >
-                    <span>{showAllArticles ? "Затвори" : "Още новини"}</span>
-                    <svg
-                      className={`h-5 w-5 transition-transform duration-500 ease-out ${showAllArticles ? "rotate-180" : "group-hover:-translate-y-0.5"}`}
-                      viewBox="0 0 20 20"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      aria-hidden="true"
-                      focusable="false"
-                    >
-                      <path
-                        d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.17l3.71-3.94a.75.75 0 0 1 1.08 1.04l-4.24 4.5a.75.75 0 0 1-1.08 0l-4.26-4.5a.75.75 0 0 1 .02-1.06Z"
-                        className="fill-current transition-colors duration-300 group-hover:text-emerald-900"
-                      />
-                    </svg>
-                  </button>
-                </div>
               </div>
             )}
           </div>
@@ -482,4 +538,3 @@ const NewsSection = ({
 };
 
 export default NewsSection;
-
