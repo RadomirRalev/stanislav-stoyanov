@@ -4,8 +4,8 @@ import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
 import { BLOCKS, INLINES, MARKS } from "@contentful/rich-text-types";
 import Footer from "../footer/Footer";
 import newsData from "../../generated/news.json";
-import { CloseButton } from "./CloseButton";
-
+import { CloseButton, ShowMoreButton } from "../common/Buttons";
+import { InfoText } from "../common/InfoText";
 
 const DATE_FORMATTER = new Intl.DateTimeFormat("bg-BG", {
   day: "2-digit",
@@ -355,27 +355,19 @@ const NewsSection = ({
 
           <div className="relative pb-12">
             {!activeArticle && articles.length > 5 && !showAllArticles && (
-              <div className="mb-6 flex justify-end">
-                <button
-                  type="button"
-                  onClick={handleOpenAllNews}
-                  className="cursor-pointer transition"
-                >
-                  <div className="text-emerald-900 hover:text-emerald-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500">
-                    <p className="text-xs font-semibold uppercase tracking-[0.4em]">
-                      Виж всички
-                    </p>
-                    <p className="text-3xl font-bold uppercase tracking-wide md:text-4xl">
-                      Новини
-                    </p>
-                  </div>
-                </button>
-              </div>
+              <header className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between mb-6">
+                <InfoText label="Последни" headline="Акценти" />
+                <ShowMoreButton
+                  onClickAction={handleOpenAllNews}
+                  label={"Виж всички"}
+                />
+              </header>
             )}
             {activeArticle ? (
               <article
                 className="relative mx-auto max-w-3xl text-black"
-                style={{ fontFamily: "'PT Serif', serif" }}              >
+                style={{ fontFamily: "'PT Serif', serif" }}
+              >
                 <CloseButton onClickAction={handleCloseArticle} />
 
                 <header className="space-y-4">

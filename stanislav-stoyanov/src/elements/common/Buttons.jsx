@@ -23,3 +23,15 @@ export const CloseButton = ({ onClickAction }) => (
     </button>
   </div>
 );
+
+export const ShowMoreButton = ({ onClickAction, label }) => (
+  <div className="mb-6 flex justify-end">
+    <button
+      type="button"
+      onClick={onClickAction}
+      className="cursor-pointer inline-flex items-center bg-emerald-500 px-5 py-2 text-sm font-semibold uppercase tracking-[0.3em] text-emerald-950 shadow-lg transition hover:bg-emerald-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-200"
+    >
+      {label}
+    </button>
+  </div>
+);

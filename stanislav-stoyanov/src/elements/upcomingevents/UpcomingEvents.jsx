@@ -1,11 +1,13 @@
-﻿const events = [
+﻿import { InfoText } from "../common/InfoText";
+
+const events = [
   {
     id: "september-town-hall",
     title: "Заседание на Комисията по земеделие",
     date: "12 септември, 2025",
     time: "18:30",
     location: "ЕП Брюксел",
-    url: "#town-hall"
+    url: "#town-hall",
   },
   {
     id: "school-forum",
@@ -13,15 +15,16 @@
     date: "18 септември, 2025",
     time: "17:00",
     location: "Велико Търново, хотел 'Интерконтинентал'",
-    url: "#school-forum"
+    url: "#school-forum",
   },
   {
     id: "small-business-roundtable",
-    title: "Изказване на пленарно заседание по темата 'Миграционни политики в Европа'",
+    title:
+      "Изказване на пленарно заседание по темата 'Миграционни политики в Европа'",
     date: "22 септември, 2025",
     time: "20:00",
     location: "ЕП Страсбург",
-    url: "#business-roundtable"
+    url: "#business-roundtable",
   },
 ];
 
@@ -30,14 +33,8 @@ const UpcomingEvents = () => {
     <section className="bg-gradient-to-b from-white via-emerald-50 to-emerald-100 py-16">
       <div className="mx-auto max-w-6xl px-6 md:px-12">
         <header className="max-w-3xl text-green-900">
-          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-emerald-600/70">
-            Следете моята дейност
-          </p>
-          <h2 className="mt-3 text-3xl font-bold uppercase tracking-wide md:text-4xl">
-            Какво предстои?
-          </h2>    
+          <InfoText label="Следете моята дейност" headline="Какво предстои?" />
         </header>
-
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {events.map(({ id, title, date, time, location, url }) => (
             <a
