@@ -29,7 +29,7 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen w-full">
       <TopSection />
-      <SocialBridge />
+      {/* <SocialBridge /> */}
       <NewsSection
         showBackLink={false}
         initialSlug={activeArticleSlug}
