@@ -1,4 +1,4 @@
-const Hero = () => {
+const HeroImage = () => {
   return (
     <section
       className="relative w-full min-h-[90vh] bg-cover bg-top bg-no-repeat"
@@ -16,4 +16,4 @@ const Hero = () => {
   );
 };
 
-export default Hero;
+export default HeroImage;

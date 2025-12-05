@@ -1,13 +1,11 @@
 import { useCallback, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import Header from "./header/Header";
-import GreenQuoteSection from "./header/GreenQuoteSection";
+import TopSection from "./top/TopSection";
 import SocialBridge from "./socialnetworks/SocialBridge";
 import NewsSection from "./articles/NewsSection";
 import YouTubeShowcase from "./videos/YouTubeShowcase";
 import UpcomingEvents from "./upcomingevents/UpcomingEvents";
 import Footer from "./footer/Footer";
-import Hero from "../elements/header/HeroSection";
 
 const LandingPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -30,7 +28,7 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen w-full">
-      <GreenQuoteSection />
+      <TopSection />
       <SocialBridge />
       <NewsSection
         showBackLink={false}
