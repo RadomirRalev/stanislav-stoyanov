@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/RadomirRalev/stanislav-stoyanov/compare/v1.1.2...v1.1.3) (2025-12-05)
+
+
+### Bug Fixes
+
+* repair social icons ([#12](https://github.com/RadomirRalev/stanislav-stoyanov/issues/12)) ([14bef2b](https://github.com/RadomirRalev/stanislav-stoyanov/commit/14bef2b5d9d0b64c9c0552ff82f045df9430ffa5))
+
 ## [1.1.2](https://github.com/RadomirRalev/stanislav-stoyanov/compare/v1.1.1...v1.1.2) (2025-10-29)
 
 
