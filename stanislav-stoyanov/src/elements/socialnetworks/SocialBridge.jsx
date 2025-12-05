@@ -1,10 +1,10 @@
-import { Facebook, Twitter, Music4 } from "lucide-react";
+import { SocialIcon } from "react-social-icons";
 
 const SocialBridge = () => {
   const items = [
-    { name: "Facebook", href: "https://facebook.com", Icon: Facebook },
-    { name: "X", href: "https://x.com", Icon: Twitter },
-    { name: "TikTok", href: "https://www.tiktok.com", Icon: Music4 },
+    { name: "Facebook", href: "https://www.facebook.com/stanislav.stoyanov.vazrazhdane.bg" },
+    { name: "X", href: "https://x.com/Stn_Stoyanov" },
+    { name: "TikTok", href: "https://www.tiktok.com/@stanislav__stoyanov" },
   ];
 
   return (
@@ -19,17 +19,18 @@ const SocialBridge = () => {
           </p>
         </div>
         <div className="flex gap-4">
-          {items.map(({ name, href, Icon }) => (
-            <a
+          {items.map(({ name, href }) => (
+            <SocialIcon
               key={name}
-              href={href}
+              url={href}
+              title={name}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-12 w-12 items-center justify-center rounded-full border border-emerald-500/50 bg-white text-emerald-700 shadow-lg transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-emerald-100 hover:text-emerald-900"
-              aria-label={name}
-            >
-              <Icon className="h-6 w-6" aria-hidden />
-            </a>
+              className="rounded-full border border-emerald-500/50 shadow-lg transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-emerald-100"
+              fgColor="#065f46"
+              bgColor="#ffffff"
+              style={{ height: 48, width: 48 }}
+            />
           ))}
         </div>
       </div>
