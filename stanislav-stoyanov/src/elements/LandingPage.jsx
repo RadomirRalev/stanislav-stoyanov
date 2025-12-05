@@ -1,7 +1,6 @@
 import { useCallback, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import Header from "./header/Header";
-import GreenQuoteSection from "./header/GreenQuoteSection";
+import TopSection from "./top/TopSection";
 import SocialBridge from "./socialnetworks/SocialBridge";
 import NewsSection from "./articles/NewsSection";
 import YouTubeShowcase from "./videos/YouTubeShowcase";
@@ -24,26 +23,13 @@ const LandingPage = () => {
         setSearchParams(nextParams, { replace: true });
       }
     },
-    [searchParams, setSearchParams],
+    [searchParams, setSearchParams]
   );
 
   return (
     <div className="min-h-screen w-full">
-      <section
-        className="relative w-full min-h-[90vh] bg-cover bg-top bg-no-repeat"
-        style={{
-          backgroundImage: `url(${import.meta.env.BASE_URL}background.jpg)`,
-        }}
-      >
-        <Header onShowAllNews={() => setShowAllNews(true)} />
-        <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-40
-               bg-gradient-to-b from-transparent via-teal-300/40 to-teal-600/60"
-          aria-hidden="true"
-        />
-      </section>
-      <GreenQuoteSection />
-      <SocialBridge />
+      <TopSection />
+      {/* <SocialBridge /> */}
       <NewsSection
         showBackLink={false}
         initialSlug={activeArticleSlug}
