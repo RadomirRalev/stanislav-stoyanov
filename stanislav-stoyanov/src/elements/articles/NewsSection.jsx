@@ -135,8 +135,12 @@ const NewsSection = ({
   }, [debouncedQuery]);
 
   const visibleArticles = useMemo(
-    () => (showAllArticles ? filteredArticles : filteredArticles.slice(0, 3)),
-    [filteredArticles, showAllArticles]
+    () => {
+      // If not showing all, always base the "top 3" on the full list, not the filtered subset.
+      if (!showAllArticles) return articles.slice(0, 3);
+      return filteredArticles;
+    },
+    [articles, filteredArticles, showAllArticles]
   );
 
   const leadArticle = visibleArticles[0] ?? null;
@@ -157,6 +161,8 @@ const NewsSection = ({
     if (activeSlug === null) return;
     setActiveSlug(null);
     onActiveSlugChange(null);
+    setQuery("");
+    setSearchInput("");
   };
 
   const handleOpenAllNews = () => {
@@ -171,6 +177,8 @@ const NewsSection = ({
 
   const toggleShowAllArticles = () => {
     setShowAllArticles((previous) => !previous);
+    setQuery("");
+    setSearchInput("");
   };
 
   const LabelAndCloseButton = () => {
