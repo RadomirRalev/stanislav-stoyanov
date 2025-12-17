@@ -3,6 +3,7 @@ import { AnimatePresence, motion as Motion } from "motion/react";
 import videosData from "../../generated/videos.json";
 import { InfoText } from "../common/InfoText";
 import { ShowMoreButton } from "../common/Buttons";
+import { SearchField } from "../common/Fields";
 
 const DATE_FORMATTER = new Intl.DateTimeFormat("bg-BG", {
   dateStyle: "medium",
@@ -94,6 +95,14 @@ const normalizedVideos = rawVideos
     return {
       id: item.id ?? item.slug ?? videoId ?? `video-${index}`,
       title: item.title ?? "Video",
+      searchText: [
+        item.title ?? "",
+        item.description ?? "",
+      ]
+        .join(" ")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, ""),
       platform,
       embedUrl,
       watchUrl,
@@ -111,14 +120,28 @@ const sortedVideos = normalizedVideos.slice().sort((a, b) => {
   return bTime - aTime;
 });
 
-const showcaseVideos = sortedVideos.slice(0, 3);
-const archiveVideos = sortedVideos;
-
 const YouTubeShowcase = () => {
   const [selectedVideoId, setSelectedVideoId] = useState(null);
   const [shareFeedback, setShareFeedback] = useState("");
   const [view, setView] = useState("showcase");
   const [playerReturnView, setPlayerReturnView] = useState("showcase");
+
+  const [searchInput, setSearchInput] = useState("");
+  const [query, setQuery] = useState("");
+
+  const handleSearchSubmit = () => setQuery(searchInput.trim());
+
+  const filteredVideos = useMemo(() => {
+    const q = query
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+    if (!q) return sortedVideos;
+    return sortedVideos.filter((video) => video.searchText.includes(q));
+  }, [query]);
+
+  const showcaseVideos = filteredVideos.slice(0, 3);
+  const archiveVideos = filteredVideos;
 
   const selectedVideo = useMemo(() => {
     if (!selectedVideoId) return null;
@@ -131,18 +154,25 @@ const YouTubeShowcase = () => {
     setView("player");
   }, []);
 
+  const resetSearch = useCallback(() => {
+    setSearchInput("");
+    setQuery("");
+  }, []);
+
   const handleClose = useCallback(() => {
     setSelectedVideoId(null);
     setShareFeedback("");
     setView((current) =>
       current === "player" ? playerReturnView : "showcase"
     );
-  }, [playerReturnView]);
+    resetSearch();
+  }, [playerReturnView, resetSearch]);
 
   const handleShowArchive = useCallback(() => {
     setView("archive");
     setSelectedVideoId(null);
     setShareFeedback("");
+    resetSearch();
   }, []);
 
   useEffect(() => {
@@ -329,15 +359,16 @@ const YouTubeShowcase = () => {
             className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 md:px-12"
           >
             <header className="flex flex-col gap-4 text-emerald-100 md:flex-row md:items-end md:justify-between">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.4em] text-emerald-300/70">
-                  Архив
-                </p>
-                <h2 className="mt-2 text-3xl font-bold uppercase tracking-wide md:text-4xl">
-                  Всички видеа
-                </h2>
-              </div>
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="flex w-full items-center justify-between gap-3">
+                <div className="w-full max-w-sm mt-6">
+                  <SearchField
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                    onSearch={handleSearchSubmit}
+                    placeholder="Търси видеа..."
+                    inputClassName="text-white placeholder:text-white/70"
+                  />
+                </div>
                 <button
                   type="button"
                   onClick={handleClose}
@@ -362,39 +393,50 @@ const YouTubeShowcase = () => {
               </div>
             </header>
 
-            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {archiveVideos.map(({ id, title, formattedDate, thumbnail }) => (
-                <Motion.button
-                  key={id}
-                  type="button"
-                  layout
-                  onClick={() => handleSelect(id, "archive")}
-                  className="group flex h-full flex-col overflow-hidden border border-emerald-500/30 bg-emerald-950/70 shadow-md transition hover:-translate-y-1 hover:shadow-lg"
-                  whileHover={{ translateY: -4 }}
-                >
-                  {thumbnail ? (
-                    <img
-                      src={thumbnail}
-                      alt={`${title} thumbnail`}
-                      className="h-40 w-full object-cover object-top"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div className="flex h-40 w-full items-center justify-center bg-emerald-900/70 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-200">
-                      No thumbnail
+            {archiveVideos.length === 0 ? (
+              <div className="rounded-md border border-emerald-500/30 bg-emerald-950/60 p-6 text-center text-emerald-100 shadow">
+                <p className="text-base font-semibold uppercase tracking-[0.2em]">
+                  Нищо не е открито
+                </p>
+                <p className="mt-1 text-sm text-emerald-200/80">
+                  Опитайте с друга ключова дума.
+                </p>
+              </div>
+            ) : (
+              <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+                {archiveVideos.map(({ id, title, formattedDate, thumbnail }) => (
+                  <Motion.button
+                    key={id}
+                    type="button"
+                    layout
+                    onClick={() => handleSelect(id, "archive")}
+                    className="group flex h-full flex-col overflow-hidden border border-emerald-500/30 bg-emerald-950/70 shadow-md transition hover:-translate-y-1 hover:shadow-lg"
+                    whileHover={{ translateY: -4 }}
+                  >
+                    {thumbnail ? (
+                      <img
+                        src={thumbnail}
+                        alt={`${title} thumbnail`}
+                        className="h-40 w-full object-cover object-top"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="flex h-40 w-full items-center justify-center bg-emerald-900/70 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-200">
+                        No thumbnail
+                      </div>
+                    )}
+                    <div className="flex flex-1 flex-col gap-2 p-5 text-emerald-50">
+                      <time className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-300/80">
+                        {formattedDate || "No date"}
+                      </time>
+                      <h3 className="text-lg font-semibold leading-snug text-white group-hover:text-emerald-200">
+                        {title}
+                      </h3>
                     </div>
-                  )}
-                  <div className="flex flex-1 flex-col gap-2 p-5 text-emerald-50">
-                    <time className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-300/80">
-                      {formattedDate || "No date"}
-                    </time>
-                    <h3 className="text-lg font-semibold leading-snug text-white group-hover:text-emerald-200">
-                      {title}
-                    </h3>
-                  </div>
-                </Motion.button>
-              ))}
-            </div>
+                  </Motion.button>
+                ))}
+              </div>
+            )}
           </Motion.div>
         )}
 

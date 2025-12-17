@@ -6,6 +6,7 @@ export const SearchField = ({
   onSearch,
   autoFocus = false,
   placeholder = "Търси...",
+  inputClassName = "",
 }) => {
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -23,7 +24,7 @@ export const SearchField = ({
         onKeyDown={handleKeyDown}
         autoFocus={autoFocus}
         placeholder={placeholder}
-        className="h-11 w-full border border-emerald-200 px-3 text-emerald-900 shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+        className={`h-11 w-full border border-emerald-200 px-3 text-emerald-900 placeholder:text-emerald-900/70 shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200 ${inputClassName}`}
       />
       <button
         type="button"
