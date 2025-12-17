@@ -198,9 +198,9 @@ const NewsSection = ({
   const NoResultsText = () => {
     return (
       <div className="rounded-md bg-white/80 p-6 text-center text-emerald-900 shadow">
-        <p className="text-base font-semibold">???? ??????? ?????????</p>
+        <p className="text-base font-semibold">Нищо не бе намерено</p>
         {query && (
-          <p className="mt-1 text-sm text-emerald-800/80">???????? ??????</p>
+          <p className="mt-1 text-sm text-emerald-800/80">Опитайте отново</p>
         )}
       </div>
     );

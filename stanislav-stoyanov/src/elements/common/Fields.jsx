@@ -4,7 +4,8 @@ export const SearchField = ({
   value,
   onChange,
   onSearch,
-  placeholder = "D›ĄSĄ?Ą?D,...",
+  autoFocus = false,
+  placeholder = "Търси...",
 }) => {
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -16,10 +17,11 @@ export const SearchField = ({
   return (
     <div className="relative w-full max-w-sm sm:-mt-6">
       <input
-        type="search"
+        type="text"
         value={value}
         onChange={onChange}
         onKeyDown={handleKeyDown}
+        autoFocus={autoFocus}
         placeholder={placeholder}
         className="h-11 w-full border border-emerald-200 px-3 text-emerald-900 shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200"
       />
