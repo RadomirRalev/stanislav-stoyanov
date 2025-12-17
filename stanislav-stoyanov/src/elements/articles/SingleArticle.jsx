@@ -1,17 +1,12 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo } from "react";
 import {
   DATE_FORMATTER,
   SOCIAL_PLATFORMS,
   richTextOptions,
 } from "./utils/articleHelpers";
 
-export const SingleArticle = ({ activeArticle, initialSlug = null }) => {
-  const [activeSlug, setActiveSlug] = useState(initialSlug);
-
-  useEffect(() => {
-    setActiveSlug(initialSlug ?? null);
-  }, [initialSlug]);
+export const SingleArticle = ({ activeArticle }) => {
 
   const fallbackParagraphs = useMemo(() => {
     if (!activeArticle) return [];
@@ -33,7 +28,7 @@ export const SingleArticle = ({ activeArticle, initialSlug = null }) => {
     const normalizedBase = baseUrl.endsWith("/")
       ? baseUrl.slice(0, -1)
       : baseUrl;
-    const relativePath = `${normalizedBase}/news/${slug}` || `/news/${slug}`;
+    const relativePath = `${normalizedBase}/news/${slug}`;
 
     if (typeof window === "undefined") {
       return relativePath.startsWith("/") ? relativePath : `/${relativePath}`;
