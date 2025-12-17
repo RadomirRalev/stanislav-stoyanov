@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/RadomirRalev/stanislav-stoyanov/compare/v1.1.3...v1.2.0) (2025-12-17)
+
+
+### Features
+
+* add search field to videos ([#15](https://github.com/RadomirRalev/stanislav-stoyanov/issues/15)) ([d91afb8](https://github.com/RadomirRalev/stanislav-stoyanov/commit/d91afb86723bd9d5cb5f04dd1935b0c9400cacde))
+
 ## [1.1.3](https://github.com/RadomirRalev/stanislav-stoyanov/compare/v1.1.2...v1.1.3) (2025-12-05)
 
 
