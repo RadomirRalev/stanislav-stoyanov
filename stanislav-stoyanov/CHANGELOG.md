@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/RadomirRalev/stanislav-stoyanov/compare/v1.2.0...v1.2.1) (2025-12-17)
+
+
+### Bug Fixes
+
+* clean small problems in NewsArticles page ([#16](https://github.com/RadomirRalev/stanislav-stoyanov/issues/16)) ([5fb17b5](https://github.com/RadomirRalev/stanislav-stoyanov/commit/5fb17b5e71ab1105b7a61994a255bfe28ca7ffe3))
+
 # [1.2.0](https://github.com/RadomirRalev/stanislav-stoyanov/compare/v1.1.3...v1.2.0) (2025-12-17)
 
 
