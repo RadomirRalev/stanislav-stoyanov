@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/RadomirRalev/stanislav-stoyanov/compare/v1.2.1...v1.2.2) (2025-12-23)
+
+
+### Bug Fixes
+
+* add share buttons to articles ([#17](https://github.com/RadomirRalev/stanislav-stoyanov/issues/17)) ([f137343](https://github.com/RadomirRalev/stanislav-stoyanov/commit/f137343e88ac6427dc17bd611b8f1547993d8a18))
+
 ## [1.2.1](https://github.com/RadomirRalev/stanislav-stoyanov/compare/v1.2.0...v1.2.1) (2025-12-17)
 
 
