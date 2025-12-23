@@ -11,9 +11,10 @@
     "prepare": "husky",
     "pull:news": "node scripts/pullNews.mjs",
     "pull:videos": "node scripts/pullVideos.mjs",
+    "pull:events": "node scripts/pullEvents.mjs",
     "pull:lead-quote": "node scripts/pullLeadQuote.mjs",
-    "predev": "npm run pull:news && npm run pull:videos && npm run pull:lead-quote",
-    "prebuild": "npm run pull:news && npm run pull:videos && npm run pull:lead-quote"
+    "predev": "npm run pull:news && npm run pull:videos && npm run pull:events && npm run pull:lead-quote",
+    "prebuild": "npm run pull:news && npm run pull:videos && npm run pull:events && npm run pull:lead-quote"
   },
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^16.1.5",

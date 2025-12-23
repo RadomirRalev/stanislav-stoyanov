@@ -1,0 +1,35 @@
+{
+  "generatedAt": "2025-12-23T14:11:50.950Z",
+  "items": [
+    {
+      "id": "2kF43VhDO7lkcNEN73E7CO",
+      "slug": "event-0",
+      "title": "Заседание на комисията по транспорт",
+      "date": "2025-12-01T14:30+01:00",
+      "time": "",
+      "location": "Европейски Парламент, Брюксел",
+      "url": "#",
+      "description": ""
+    },
+    {
+      "id": "2FiZU0ipG2B4omtQct37YD",
+      "slug": "event-1",
+      "title": "Заседание на комисията по земеделие",
+      "date": "2025-09-22T18:30+01:00",
+      "time": "",
+      "location": "Европейски Парламент, Брюксел",
+      "url": "#",
+      "description": ""
+    },
+    {
+      "id": "4cUSlWexU0jywhzEn76sud",
+      "slug": "event-2",
+      "title": "Среща с граждани",
+      "date": "2025-09-18T17:00+01:00",
+      "time": "",
+      "location": "Стара Загора, Хотел \"Стара Загора\"",
+      "url": "#",
+      "description": ""
+    }
+  ]
+}
