@@ -18,7 +18,12 @@ export const SingleArticle = ({ activeArticle }) => {
   }, [activeArticle]);
 
   const buildArticleShareUrl = (slug) => {
-    if (!slug) return "";
+    if (!slug) {
+      if (typeof window !== "undefined" && window.location?.href) {
+        return window.location.href;
+      }
+      return "";
+    }
 
     const baseUrl =
       typeof import.meta !== "undefined" && import.meta.env?.BASE_URL

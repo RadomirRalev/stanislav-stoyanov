@@ -24,7 +24,7 @@ export const SearchField = ({
         onKeyDown={handleKeyDown}
         autoFocus={autoFocus}
         placeholder={placeholder}
-        className={`h-11 w-full border border-emerald-200 px-3 text-emerald-900 placeholder:text-emerald-900/70 shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200 ${inputClassName}`}
+        className={`h-11 w-full border border-emerald-200 px-3 text-emerald-900 placeholder:text-emerald-600/70 shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200 ${inputClassName}`}
       />
       <button
         type="button"
