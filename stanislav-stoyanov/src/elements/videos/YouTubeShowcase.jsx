@@ -206,9 +206,12 @@ const YouTubeShowcase = () => {
   }, [playerReturnView, selectedVideo, view]);
 
   const handleShare = useCallback(async () => {
-    if (!selectedVideo?.watchUrl) return;
+    const shareUrl =
+      selectedVideo?.watchUrl ||
+      (typeof window !== "undefined" && window.location?.href) ||
+      null;
 
-    const shareUrl = selectedVideo.watchUrl;
+    if (!shareUrl) return;
 
     try {
       if (typeof navigator !== "undefined" && navigator.share) {
