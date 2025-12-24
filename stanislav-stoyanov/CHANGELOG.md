@@ -1,3 +1,10 @@
+## [1.2.3](https://github.com/RadomirRalev/stanislav-stoyanov/compare/v1.2.2...v1.2.3) (2025-12-24)
+
+
+### Bug Fixes
+
+* improve footer design ([#19](https://github.com/RadomirRalev/stanislav-stoyanov/issues/19)) ([61e0b03](https://github.com/RadomirRalev/stanislav-stoyanov/commit/61e0b03eca23a4686d05f17a2b6217aa851b435e))
+
 ## [1.2.2](https://github.com/RadomirRalev/stanislav-stoyanov/compare/v1.2.1...v1.2.2) (2025-12-23)
 
 
