@@ -68,17 +68,53 @@ const Footer = () => {
               </a>
             ))}
           </div>
-          <p className="text-xs text-emerald-100/60">
-            Абонирайте се за нашия бюлетин за актуализации относно събитията в
-            общността.
-          </p>
         </FooterColumn>
+      </div>
+
+      <div>
+        <div className="flex flex-wrap items-center justify-center gap-6 px-6 py-6">
+          {[
+            {
+              src: `${import.meta.env.BASE_URL}esn-group-logo.png`,
+              alt: "ESN Group",
+              href: "https://esn-group.eu/",
+              heightClass: "h-30",
+            },
+            {
+              src: `${import.meta.env.BASE_URL}esn-party-logo.png`,
+              alt: "ESN Party",
+              href: "https://esn-party.eu/",
+              heightClass: "h-35",
+            },
+            {
+              src: `${import.meta.env.BASE_URL}vazrazhdane-logo.png`,
+              alt: "Vazrazhdane",
+              href: "https://vazrazhdane.bg/",
+              heightClass: "h-25",
+            },
+          ].map(({ src, alt, href, heightClass }) => (
+            <a
+              key={alt}
+              href={href}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex"
+            >
+              <img
+                src={src}
+                alt={alt}
+                className={`${heightClass} w-auto opacity-80 drop-shadow transition hover:opacity-100`}
+                loading="lazy"
+              />
+            </a>
+          ))}
+        </div>
       </div>
 
       <div className="border-t border-emerald-800/60">
         <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-6 text-xs text-emerald-200/60 md:flex-row md:items-center md:justify-between md:px-12">
           <p>
-            � {new Date().getFullYear()} Станислав Стоянов. Всички права
+            (c) {new Date().getFullYear()} Станислав Стоянов. Всички права
             запазени.
           </p>
           <div className="flex gap-4">
